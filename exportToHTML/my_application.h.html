@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>my_application.h</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+my_application.h</font>
+</center></td></tr></table>
+<pre><span class="s0">#ifndef </span><span class="s1">FLUTTER_MY_APPLICATION_H_</span>
+<span class="s0">#define </span><span class="s1">FLUTTER_MY_APPLICATION_H_</span>
+
+<span class="s0">#include </span><span class="s2">&lt;gtk/gtk.h&gt;</span>
+
+<span class="s1">G_DECLARE_FINAL_TYPE(MyApplication, my_application, MY, APPLICATION,</span>
+                     <span class="s1">GtkApplication)</span>
+
+<span class="s3">/** 
+ * my_application_new: 
+ * 
+ * Creates a new Flutter-based application. 
+ * 
+ * Returns: a new #MyApplication. 
+ */</span>
+<span class="s1">MyApplication* my_application_new();</span>
+
+<span class="s0">#endif  </span><span class="s3">// FLUTTER_MY_APPLICATION_H_</span>
+</pre>
+</body>
+</html>

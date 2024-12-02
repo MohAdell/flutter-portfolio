@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>index.html</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #d19a66; font-style: italic;}
+.s2 { color: #ef596f;}
+.s3 { color: #5c6370; font-style: italic;}
+.s4 { color: #89ca78;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+index.html</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;!DOCTYPE </span><span class="s1">html</span><span class="s0">&gt;</span>
+<span class="s0">&lt;</span><span class="s2">html</span><span class="s0">&gt;</span>
+<span class="s0">&lt;</span><span class="s2">head</span><span class="s0">&gt;</span>
+  <span class="s3">&lt;!--</span>
+    <span class="s3">If you are serving your web app in a path other than the root, change the 
+    href value below to reflect the base path you are serving from. 
+ 
+    The path provided below has to start and end with a slash &quot;/&quot; in order for 
+    it to work correctly. 
+ 
+    For more details: 
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base 
+  --&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">base </span><span class="s1">href</span><span class="s4">=&quot;/&quot;</span><span class="s0">&gt;</span>
+
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">charset</span><span class="s4">=&quot;UTF-8&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">content</span><span class="s4">=&quot;IE=Edge&quot; </span><span class="s1">http-equiv</span><span class="s4">=&quot;X-UA-Compatible&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">name</span><span class="s4">=&quot;description&quot; </span><span class="s1">content</span><span class="s4">=&quot;A new Flutter project.&quot;</span><span class="s0">&gt;</span>
+
+  <span class="s3">&lt;!-- iOS meta tags &amp; icons --&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">name</span><span class="s4">=&quot;apple-mobile-web-app-capable&quot; </span><span class="s1">content</span><span class="s4">=&quot;yes&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">name</span><span class="s4">=&quot;apple-mobile-web-app-status-bar-style&quot; </span><span class="s1">content</span><span class="s4">=&quot;black&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">meta </span><span class="s1">name</span><span class="s4">=&quot;apple-mobile-web-app-title&quot; </span><span class="s1">content</span><span class="s4">=&quot;Portfolio App&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">link </span><span class="s1">rel</span><span class="s4">=&quot;apple-touch-icon&quot; </span><span class="s1">href</span><span class="s4">=&quot;icons/favicon.ico&quot;</span><span class="s0">&gt;</span>
+
+  <span class="s0">&lt;</span><span class="s2">title</span><span class="s0">&gt;Mohamed Adel Portfolio&lt;/</span><span class="s2">title</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">link </span><span class="s1">rel</span><span class="s4">=&quot;manifest&quot; </span><span class="s1">href</span><span class="s4">=&quot;manifest.json&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">link </span><span class="s1">rel</span><span class="s4">=&quot;website icon&quot; </span><span class="s1">href</span><span class="s4">=&quot;/assets/icons/favicon.ico&quot; </span><span class="s1">type</span><span class="s4">=&quot;image/x-icon&quot;</span><span class="s0">&gt;</span>
+<span class="s0">&lt;/</span><span class="s2">head</span><span class="s0">&gt;</span>
+<span class="s0">&lt;</span><span class="s2">body</span><span class="s0">&gt;</span>
+  <span class="s3">&lt;!-- This script installs service_worker.js to provide PWA functionality to 
+       application. For more information, see: 
+       https://developers.google.com/web/fundamentals/primers/service-workers --&gt;</span>
+  <span class="s0">&lt;</span><span class="s2">script</span><span class="s0">&gt;</span>
+    <span class="s0">var serviceWorkerVersion = null;</span>
+    <span class="s0">var scriptLoaded = false;</span>
+    <span class="s0">function loadMainDartJs() {</span>
+      <span class="s0">if (scriptLoaded) {</span>
+        <span class="s0">return;</span>
+      <span class="s0">}</span>
+      <span class="s0">scriptLoaded = true;</span>
+      <span class="s0">var scriptTag = document.createElement('script');</span>
+      <span class="s0">scriptTag.src = 'main.dart.js';</span>
+      <span class="s0">scriptTag.type = 'application/javascript';</span>
+      <span class="s0">document.body.append(scriptTag);</span>
+    <span class="s0">}</span>
+
+    <span class="s0">if ('serviceWorker' in navigator) {</span>
+      <span class="s0">// Service workers are supported. Use them.</span>
+      <span class="s0">window.addEventListener('load', function () {</span>
+        <span class="s0">// Wait for registration to finish before dropping the &lt;script&gt; tag.</span>
+        <span class="s0">// Otherwise, the browser will load the script multiple times,</span>
+        <span class="s0">// potentially different versions.</span>
+        <span class="s0">var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;</span>
+        <span class="s0">navigator.serviceWorker.register(serviceWorkerUrl)</span>
+          <span class="s0">.then((reg) =&gt; {</span>
+            <span class="s0">function waitForActivation(serviceWorker) {</span>
+              <span class="s0">serviceWorker.addEventListener('statechange', () =&gt; {</span>
+                <span class="s0">if (serviceWorker.state == 'activated') {</span>
+                  <span class="s0">console.log('Installed new service worker.');</span>
+                  <span class="s0">loadMainDartJs();</span>
+                <span class="s0">}</span>
+              <span class="s0">});</span>
+            <span class="s0">}</span>
+            <span class="s0">if (!reg.active &amp;&amp; (reg.installing || reg.waiting)) {</span>
+              <span class="s0">// No active web worker and we have installed or are installing</span>
+              <span class="s0">// one for the first time. Simply wait for it to activate.</span>
+              <span class="s0">waitForActivation(reg.installing ?? reg.waiting);</span>
+            <span class="s0">} else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {</span>
+              <span class="s0">// When the app updates the serviceWorkerVersion changes, so we</span>
+              <span class="s0">// need to ask the service worker to update.</span>
+              <span class="s0">console.log('New service worker available.');</span>
+              <span class="s0">reg.update();</span>
+              <span class="s0">waitForActivation(reg.installing);</span>
+            <span class="s0">} else {</span>
+              <span class="s0">// Existing service worker is still good.</span>
+              <span class="s0">console.log('Loading app from service worker.');</span>
+              <span class="s0">loadMainDartJs();</span>
+            <span class="s0">}</span>
+          <span class="s0">});</span>
+
+        <span class="s0">// If service worker doesn't succeed in a reasonable amount of time,</span>
+        <span class="s0">// fallback to plaint &lt;script&gt; tag.</span>
+        <span class="s0">setTimeout(() =&gt; {</span>
+          <span class="s0">if (!scriptLoaded) {</span>
+            <span class="s0">console.warn(</span>
+              <span class="s0">'Failed to load app from service worker. Falling back to plain &lt;script&gt; tag.',</span>
+            <span class="s0">);</span>
+            <span class="s0">loadMainDartJs();</span>
+          <span class="s0">}</span>
+        <span class="s0">}, 4000);</span>
+      <span class="s0">});</span>
+    <span class="s0">} else {</span>
+      <span class="s0">// Service workers not supported. Just drop the &lt;script&gt; tag.</span>
+      <span class="s0">loadMainDartJs();</span>
+    <span class="s0">}</span>
+  <span class="s0">&lt;/</span><span class="s2">script</span><span class="s0">&gt;</span>
+<span class="s0">&lt;/</span><span class="s2">body</span><span class="s0">&gt;</span>
+<span class="s0">&lt;/</span><span class="s2">html</span><span class="s0">&gt;</span>
+</pre>
+</body>
+</html>

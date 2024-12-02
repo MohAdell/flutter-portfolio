@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>expr_card.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+.s4 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+expr_card.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/models/Expr.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">ExprCard </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">ExprCard({</span>
+    <span class="s0">Key? key,</span>
+    <span class="s0">required </span><span class="s2">this</span><span class="s0">.expr,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s2">final </span><span class="s0">Expr expr;</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Container(</span>
+      <span class="s0">width: </span><span class="s3">350</span><span class="s0">,</span>
+      <span class="s0">padding: EdgeInsets.all(defaultPadding),</span>
+      <span class="s0">color: secondaryColor,</span>
+      <span class="s0">child: Column(</span>
+        <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+        <span class="s0">children: [</span>
+          <span class="s0">Text(</span>
+            <span class="s0">expr.titel!,</span>
+            <span class="s0">style: Theme.of(context).textTheme.titleLarge,</span>
+          <span class="s0">),</span>
+          
+          <span class="s0">Text(</span>
+            <span class="s0">expr.durs!,</span>
+            <span class="s0">maxLines: </span><span class="s3">4</span><span class="s0">,</span>
+            <span class="s0">overflow: TextOverflow.ellipsis,</span>
+            <span class="s0">style: TextStyle(height: </span><span class="s3">1.5</span><span class="s0">),</span>
+          <span class="s0">),</span>
+          
+          <span class="s2">const </span><span class="s0">SizedBox(height: defaultPadding),</span>
+          <span class="s0">Text(</span>
+            <span class="s0">expr.company!,</span>
+            <span class="s0">style: Theme.of(context).textTheme.titleSmall?.copyWith(color: txtColor),</span>
+            <span class="s4">// color: txtColor,</span>
+          <span class="s0">),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

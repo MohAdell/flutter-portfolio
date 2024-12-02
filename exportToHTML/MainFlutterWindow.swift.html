@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>MainFlutterWindow.swift</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #e5c07b;}
+.s3 { color: #bbbbbb;}
+.s4 { color: #61afef;}
+.s5 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainFlutterWindow.swift</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s2">Cocoa</span>
+<span class="s0">import </span><span class="s2">FlutterMacOS</span>
+
+<span class="s0">class </span><span class="s2">MainFlutterWindow</span><span class="s1">: </span><span class="s3">NSWindow {</span>
+  <span class="s1">override func awakeFromNib() {</span>
+    <span class="s0">let </span><span class="s1">flutterViewController </span><span class="s0">= </span><span class="s1">FlutterViewController.</span><span class="s0">init</span><span class="s1">()</span>
+    <span class="s0">let </span><span class="s1">windowFrame </span><span class="s0">= </span><span class="s3">self</span><span class="s1">.</span><span class="s3">frame</span>
+    <span class="s3">self</span><span class="s1">.</span><span class="s3">contentViewController </span><span class="s0">= </span><span class="s1">flutterViewController 
+    </span><span class="s3">self</span><span class="s1">.</span><span class="s4">setFrame</span><span class="s1">(windowFrame, </span><span class="s4">display</span><span class="s1">: </span><span class="s5">true</span><span class="s1">)</span>
+
+    <span class="s4">RegisterGeneratedPlugins</span><span class="s1">(</span><span class="s4">registry</span><span class="s1">: flutterViewController)</span>
+
+    <span class="s3">super</span><span class="s1">.</span><span class="s4">awakeFromNib</span><span class="s1">()</span>
+  <span class="s1">}</span>
+<span class="s1">} 
+</span></pre>
+</body>
+</html>

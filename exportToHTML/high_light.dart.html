@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>high_light.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+high_light.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'../../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">HighLight </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">HighLight({</span>
+    <span class="s0">Key? key,</span>
+    <span class="s0">required </span><span class="s2">this</span><span class="s0">.counter,</span>
+    <span class="s2">this</span><span class="s0">.label,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s2">final </span><span class="s0">Widget counter;</span>
+  <span class="s2">final </span><span class="s0">String? label;</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Row(</span>
+      <span class="s0">children: [</span>
+        <span class="s0">counter,</span>
+        <span class="s0">SizedBox(</span>
+          <span class="s0">width: defaultPadding / </span><span class="s3">2</span><span class="s0">,</span>
+        <span class="s0">),</span>
+        <span class="s0">Text(</span>
+          <span class="s0">label!,</span>
+          <span class="s0">style: Theme.of(context).textTheme.titleSmall,</span>
+        <span class="s0">)</span>
+      <span class="s0">],</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

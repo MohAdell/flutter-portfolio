@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>my_application.cc</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+.s4 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+my_application.cc</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&quot;my_application.h&quot;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;flutter_linux/flutter_linux.h&gt;</span>
+<span class="s0">#ifdef </span><span class="s1">GDK_WINDOWING_X11</span>
+<span class="s0">#include </span><span class="s2">&lt;gdk/gdkx.h&gt;</span>
+<span class="s0">#endif</span>
+
+<span class="s0">#include </span><span class="s2">&quot;flutter/generated_plugin_registrant.h&quot;</span>
+
+<span class="s0">struct </span><span class="s1">_MyApplication {</span>
+  <span class="s1">GtkApplication parent_instance;</span>
+  <span class="s0">char</span><span class="s1">** dart_entrypoint_arguments;</span>
+<span class="s1">};</span>
+
+<span class="s1">G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)</span>
+
+<span class="s3">// Implements GApplication::activate.</span>
+<span class="s0">static void </span><span class="s1">my_application_activate(GApplication* application) {</span>
+  <span class="s1">MyApplication* self = MY_APPLICATION(application);</span>
+  <span class="s1">GtkWindow* window =</span>
+      <span class="s1">GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));</span>
+
+  <span class="s3">// Use a header bar when running in GNOME as this is the common style used</span>
+  <span class="s3">// by applications and is the setup most users will be using (e.g. Ubuntu</span>
+  <span class="s3">// desktop).</span>
+  <span class="s3">// If running on X and not using GNOME then just use a traditional title bar</span>
+  <span class="s3">// in case the window manager does more exotic layout, e.g. tiling.</span>
+  <span class="s3">// If running on Wayland assume the header bar will work (may need changing</span>
+  <span class="s3">// if future cases occur).</span>
+  <span class="s1">gboolean use_header_bar = TRUE;</span>
+<span class="s0">#ifdef </span><span class="s1">GDK_WINDOWING_X11</span>
+  <span class="s1">GdkScreen* screen = gtk_window_get_screen(window);</span>
+  <span class="s0">if </span><span class="s1">(GDK_IS_X11_SCREEN(screen)) {</span>
+    <span class="s0">const </span><span class="s1">gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);</span>
+    <span class="s0">if </span><span class="s1">(g_strcmp0(wm_name, </span><span class="s2">&quot;GNOME Shell&quot;</span><span class="s1">) != </span><span class="s4">0</span><span class="s1">) {</span>
+      <span class="s1">use_header_bar = FALSE;</span>
+    <span class="s1">}</span>
+  <span class="s1">}</span>
+<span class="s0">#endif</span>
+  <span class="s0">if </span><span class="s1">(use_header_bar) {</span>
+    <span class="s1">GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());</span>
+    <span class="s1">gtk_widget_show(GTK_WIDGET(header_bar));</span>
+    <span class="s1">gtk_header_bar_set_title(header_bar, </span><span class="s2">&quot;flutter_website&quot;</span><span class="s1">);</span>
+    <span class="s1">gtk_header_bar_set_show_close_button(header_bar, TRUE);</span>
+    <span class="s1">gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));</span>
+  <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+    <span class="s1">gtk_window_set_title(window, </span><span class="s2">&quot;flutter_website&quot;</span><span class="s1">);</span>
+  <span class="s1">}</span>
+
+  <span class="s1">gtk_window_set_default_size(window, </span><span class="s4">1280</span><span class="s1">, </span><span class="s4">720</span><span class="s1">);</span>
+  <span class="s1">gtk_widget_show(GTK_WIDGET(window));</span>
+
+  <span class="s1">g_autoptr(FlDartProject) project = fl_dart_project_new();</span>
+  <span class="s1">fl_dart_project_set_dart_entrypoint_arguments(project, self-&gt;dart_entrypoint_arguments);</span>
+
+  <span class="s1">FlView* view = fl_view_new(project);</span>
+  <span class="s1">gtk_widget_show(GTK_WIDGET(view));</span>
+  <span class="s1">gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));</span>
+
+  <span class="s1">fl_register_plugins(FL_PLUGIN_REGISTRY(view));</span>
+
+  <span class="s1">gtk_widget_grab_focus(GTK_WIDGET(view));</span>
+<span class="s1">}</span>
+
+<span class="s3">// Implements GApplication::local_command_line.</span>
+<span class="s0">static </span><span class="s1">gboolean my_application_local_command_line(GApplication* application, gchar*** arguments, </span><span class="s0">int</span><span class="s1">* exit_status) {</span>
+  <span class="s1">MyApplication* self = MY_APPLICATION(application);</span>
+  <span class="s3">// Strip out the first argument as it is the binary name.</span>
+  <span class="s1">self-&gt;dart_entrypoint_arguments = g_strdupv(*arguments + </span><span class="s4">1</span><span class="s1">);</span>
+
+  <span class="s1">g_autoptr(GError) error = </span><span class="s0">nullptr</span><span class="s1">;</span>
+  <span class="s0">if </span><span class="s1">(!g_application_register(application, </span><span class="s0">nullptr</span><span class="s1">, &amp;error)) {</span>
+     <span class="s1">g_warning(</span><span class="s2">&quot;Failed to register: %s&quot;</span><span class="s1">, error-&gt;message);</span>
+     <span class="s1">*exit_status = </span><span class="s4">1</span><span class="s1">;</span>
+     <span class="s0">return </span><span class="s1">TRUE;</span>
+  <span class="s1">}</span>
+
+  <span class="s1">g_application_activate(application);</span>
+  <span class="s1">*exit_status = </span><span class="s4">0</span><span class="s1">;</span>
+
+  <span class="s0">return </span><span class="s1">TRUE;</span>
+<span class="s1">}</span>
+
+<span class="s3">// Implements GApplication::startup.</span>
+<span class="s0">static void </span><span class="s1">my_application_startup(GApplication* application) {</span>
+  <span class="s3">//MyApplication* self = MY_APPLICATION(object);</span>
+
+  <span class="s3">// Perform any actions required at application startup.</span>
+
+  <span class="s1">G_APPLICATION_CLASS(my_application_parent_class)-&gt;startup(application);</span>
+<span class="s1">}</span>
+
+<span class="s3">// Implements GApplication::shutdown.</span>
+<span class="s0">static void </span><span class="s1">my_application_shutdown(GApplication* application) {</span>
+  <span class="s3">//MyApplication* self = MY_APPLICATION(object);</span>
+
+  <span class="s3">// Perform any actions required at application shutdown.</span>
+
+  <span class="s1">G_APPLICATION_CLASS(my_application_parent_class)-&gt;shutdown(application);</span>
+<span class="s1">}</span>
+
+<span class="s3">// Implements GObject::dispose.</span>
+<span class="s0">static void </span><span class="s1">my_application_dispose(GObject* object) {</span>
+  <span class="s1">MyApplication* self = MY_APPLICATION(object);</span>
+  <span class="s1">g_clear_pointer(&amp;self-&gt;dart_entrypoint_arguments, g_strfreev);</span>
+  <span class="s1">G_OBJECT_CLASS(my_application_parent_class)-&gt;dispose(object);</span>
+<span class="s1">}</span>
+
+<span class="s0">static void </span><span class="s1">my_application_class_init(MyApplicationClass* klass) {</span>
+  <span class="s1">G_APPLICATION_CLASS(klass)-&gt;activate = my_application_activate;</span>
+  <span class="s1">G_APPLICATION_CLASS(klass)-&gt;local_command_line = my_application_local_command_line;</span>
+  <span class="s1">G_APPLICATION_CLASS(klass)-&gt;startup = my_application_startup;</span>
+  <span class="s1">G_APPLICATION_CLASS(klass)-&gt;shutdown = my_application_shutdown;</span>
+  <span class="s1">G_OBJECT_CLASS(klass)-&gt;dispose = my_application_dispose;</span>
+<span class="s1">}</span>
+
+<span class="s0">static void </span><span class="s1">my_application_init(MyApplication* self) {}</span>
+
+<span class="s1">MyApplication* my_application_new() {</span>
+  <span class="s0">return </span><span class="s1">MY_APPLICATION(g_object_new(my_application_get_type(),</span>
+                                     <span class="s2">&quot;application-id&quot;</span><span class="s1">, APPLICATION_ID,</span>
+                                     <span class="s2">&quot;flags&quot;</span><span class="s1">, G_APPLICATION_NON_UNIQUE,</span>
+                                     <span class="s0">nullptr</span><span class="s1">));</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

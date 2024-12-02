@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>flutter_window.h</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+flutter_window.h</font>
+</center></td></tr></table>
+<pre><span class="s0">#ifndef </span><span class="s1">RUNNER_FLUTTER_WINDOW_H_</span>
+<span class="s0">#define </span><span class="s1">RUNNER_FLUTTER_WINDOW_H_</span>
+
+<span class="s0">#include </span><span class="s2">&lt;flutter/dart_project.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;flutter/flutter_view_controller.h&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;memory&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&quot;win32_window.h&quot;</span>
+
+<span class="s3">// A window that does nothing but host a Flutter view.</span>
+<span class="s0">class </span><span class="s1">FlutterWindow : </span><span class="s0">public </span><span class="s1">Win32Window {</span>
+ <span class="s0">public</span><span class="s1">:</span>
+  <span class="s3">// Creates a new FlutterWindow hosting a Flutter view running |project|.</span>
+  <span class="s0">explicit </span><span class="s1">FlutterWindow(</span><span class="s0">const </span><span class="s1">flutter::DartProject&amp; project);</span>
+  <span class="s0">virtual </span><span class="s1">~FlutterWindow();</span>
+
+ <span class="s0">protected</span><span class="s1">:</span>
+  <span class="s3">// Win32Window:</span>
+  <span class="s0">bool </span><span class="s1">OnCreate() override;</span>
+  <span class="s0">void </span><span class="s1">OnDestroy() override;</span>
+  <span class="s1">LRESULT MessageHandler(HWND window, UINT </span><span class="s0">const </span><span class="s1">message, WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                         <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept </span><span class="s1">override;</span>
+
+ <span class="s0">private</span><span class="s1">:</span>
+  <span class="s3">// The project to run.</span>
+  <span class="s1">flutter::DartProject project_;</span>
+
+  <span class="s3">// The Flutter instance hosted by this window.</span>
+  <span class="s1">std::unique_ptr&lt;flutter::FlutterViewController&gt; flutter_controller_;</span>
+<span class="s1">};</span>
+
+<span class="s0">#endif  </span><span class="s3">// RUNNER_FLUTTER_WINDOW_H_</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>skills.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+.s4 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+skills.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/components/animated_progress_indicator.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:marquee/marquee.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'../../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">Skills </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">Skills({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Column(</span>
+      <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+      <span class="s0">children: [</span>
+        <span class="s0">Divider(),</span>
+        <span class="s0">Padding(</span>
+          <span class="s0">padding: </span><span class="s2">const </span><span class="s0">EdgeInsets.symmetric(vertical: defaultPadding),</span>
+          <span class="s0">child: Text(</span>
+            <span class="s1">&quot;Skills&quot;</span><span class="s0">,</span>
+            <span class="s0">style: Theme.of(context).textTheme.titleSmall,</span>
+          <span class="s0">),</span>
+        <span class="s0">),</span>
+        <span class="s0">Row(</span>
+          <span class="s0">children: [</span>
+            <span class="s0">Expanded(</span>
+              <span class="s0">child: AnimatedCircularProgressIndicator(</span>
+                <span class="s0">percentage: </span><span class="s3">0.70</span><span class="s0">,</span>
+                <span class="s0">label: Text(</span><span class="s1">&quot;Flutter&quot;</span><span class="s0">),</span>
+              <span class="s0">),</span>
+            <span class="s0">),</span>
+            <span class="s0">SizedBox(</span>
+              <span class="s0">width: defaultPadding,</span>
+            <span class="s0">),</span>
+            <span class="s0">Expanded(</span>
+              <span class="s0">child: AnimatedCircularProgressIndicator(</span>
+                <span class="s0">percentage: </span><span class="s3">0.70</span><span class="s0">,</span>
+                <span class="s0">label: Marquee(</span>
+                  <span class="s0">text: </span><span class="s1">'Digital Marketing'</span><span class="s0">,</span>
+                  <span class="s0">scrollAxis: Axis.horizontal,</span>
+                  <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+                  <span class="s0">blankSpace: </span><span class="s3">20.0</span><span class="s0">,</span>
+                  <span class="s0">velocity: </span><span class="s3">100.0</span><span class="s0">, </span><span class="s4">// Adjust the speed as needed</span>
+                  <span class="s0">pauseAfterRound: Duration(seconds: </span><span class="s3">1</span><span class="s0">), </span><span class="s4">// Adjust pause duration</span>
+                  <span class="s0">startPadding: </span><span class="s3">10.0</span><span class="s0">, </span><span class="s4">// Adjust start padding</span>
+                  <span class="s0">accelerationDuration: Duration(seconds: </span><span class="s3">1</span><span class="s0">), </span><span class="s4">// Adjust acceleration</span>
+                  <span class="s0">accelerationCurve: Curves.linear, </span><span class="s4">// Adjust acceleration curve</span>
+                  <span class="s0">decelerationDuration: Duration(milliseconds: </span><span class="s3">500</span><span class="s0">), </span><span class="s4">// Adjust deceleration</span>
+                  <span class="s0">decelerationCurve: Curves.easeOut, </span><span class="s4">// Adjust deceleration curve</span>
+                <span class="s0">),</span>
+              <span class="s0">),</span>
+            <span class="s0">),</span>
+            <span class="s0">SizedBox(</span>
+              <span class="s0">width: defaultPadding,</span>
+            <span class="s0">),</span>
+            <span class="s0">Expanded(</span>
+              <span class="s0">child: AnimatedCircularProgressIndicator(</span>
+                <span class="s0">percentage: </span><span class="s3">0.90</span><span class="s0">,</span>
+                <span class="s0">label: Marquee(</span>
+                  <span class="s0">text: </span><span class="s1">'Web Builder'</span><span class="s0">,</span>
+                  <span class="s0">scrollAxis: Axis.horizontal,</span>
+                  <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+                  <span class="s0">blankSpace: </span><span class="s3">20.0</span><span class="s0">,</span>
+                  <span class="s0">velocity: </span><span class="s3">100.0</span><span class="s0">, </span><span class="s4">// Adjust the speed as needed</span>
+                  <span class="s0">pauseAfterRound: Duration(seconds: </span><span class="s3">1</span><span class="s0">), </span><span class="s4">// Adjust pause duration</span>
+                  <span class="s0">startPadding: </span><span class="s3">10.0</span><span class="s0">, </span><span class="s4">// Adjust start padding</span>
+                  <span class="s0">accelerationDuration: Duration(seconds: </span><span class="s3">1</span><span class="s0">), </span><span class="s4">// Adjust acceleration</span>
+                  <span class="s0">accelerationCurve: Curves.linear, </span><span class="s4">// Adjust acceleration curve</span>
+                  <span class="s0">decelerationDuration: Duration(milliseconds: </span><span class="s3">500</span><span class="s0">), </span><span class="s4">// Adjust deceleration</span>
+                  <span class="s0">decelerationCurve: Curves.easeOut, </span><span class="s4">// Adjust deceleration curve</span>
+                <span class="s0">),</span>
+              <span class="s0">),</span>
+            <span class="s0">),</span>
+          <span class="s0">],</span>
+
+        <span class="s0">),</span>
+
+      <span class="s0">],</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+<span class="s2">class </span><span class="s0">AnimatedCircularProgressIndicator </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">final </span><span class="s0">double percentage;</span>
+  <span class="s2">final </span><span class="s0">Widget label;</span>
+
+  <span class="s2">const </span><span class="s0">AnimatedCircularProgressIndicator({</span>
+    <span class="s0">Key? key,</span>
+    <span class="s0">required </span><span class="s2">this</span><span class="s0">.percentage,</span>
+    <span class="s0">required </span><span class="s2">this</span><span class="s0">.label,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Column(</span>
+      <span class="s0">mainAxisAlignment: MainAxisAlignment.center,</span>
+      <span class="s0">children: [</span>
+        <span class="s0">Stack(</span>
+          <span class="s0">alignment: Alignment.center,</span>
+          <span class="s0">children: [</span>
+            <span class="s0">CircularProgressIndicator(</span>
+              <span class="s0">value: percentage,</span>
+              <span class="s0">backgroundColor: Colors.grey[</span><span class="s3">200</span><span class="s0">],</span>
+              <span class="s0">color: Colors.orange,</span>
+              <span class="s0">strokeWidth: </span><span class="s3">5.0</span><span class="s0">,</span>
+            <span class="s0">),</span>
+            <span class="s0">Text(</span>
+              <span class="s1">&quot;</span><span class="s0">${(percentage * </span><span class="s3">100</span><span class="s0">).toInt()}</span><span class="s1">%&quot;</span><span class="s0">, </span><span class="s4">// النسبة المئوية</span>
+              <span class="s0">style: Theme.of(context).textTheme.bodyLarge?.copyWith(</span>
+                <span class="s0">fontSize: </span><span class="s3">12</span><span class="s0">,</span>
+                <span class="s0">color: Colors.white</span>
+              <span class="s0">),</span>
+            <span class="s0">),</span>
+          <span class="s0">],</span>
+        <span class="s0">),</span>
+        <span class="s0">SizedBox(height: </span><span class="s3">8</span><span class="s0">),</span>
+        <span class="s0">SizedBox(</span>
+          <span class="s0">height: </span><span class="s3">20</span><span class="s0">,</span>
+          <span class="s0">child: Center(child: label),</span>
+        <span class="s0">),</span>
+      <span class="s0">],</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>win32_window.h</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+win32_window.h</font>
+</center></td></tr></table>
+<pre><span class="s0">#ifndef </span><span class="s1">RUNNER_WIN32_WINDOW_H_</span>
+<span class="s0">#define </span><span class="s1">RUNNER_WIN32_WINDOW_H_</span>
+
+<span class="s0">#include </span><span class="s2">&lt;windows.h&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;functional&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;memory&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;string&gt;</span>
+
+<span class="s3">// A class abstraction for a high DPI-aware Win32 Window. Intended to be</span>
+<span class="s3">// inherited from by classes that wish to specialize with custom</span>
+<span class="s3">// rendering and input handling</span>
+<span class="s0">class </span><span class="s1">Win32Window {</span>
+ <span class="s0">public</span><span class="s1">:</span>
+  <span class="s0">struct </span><span class="s1">Point {</span>
+    <span class="s0">unsigned int </span><span class="s1">x;</span>
+    <span class="s0">unsigned int </span><span class="s1">y;</span>
+    <span class="s1">Point(</span><span class="s0">unsigned int </span><span class="s1">x, </span><span class="s0">unsigned int </span><span class="s1">y) : x(x), y(y) {}</span>
+  <span class="s1">};</span>
+
+  <span class="s0">struct </span><span class="s1">Size {</span>
+    <span class="s0">unsigned int </span><span class="s1">width;</span>
+    <span class="s0">unsigned int </span><span class="s1">height;</span>
+    <span class="s1">Size(</span><span class="s0">unsigned int </span><span class="s1">width, </span><span class="s0">unsigned int </span><span class="s1">height)</span>
+        <span class="s1">: width(width), height(height) {}</span>
+  <span class="s1">};</span>
+
+  <span class="s1">Win32Window();</span>
+  <span class="s0">virtual </span><span class="s1">~Win32Window();</span>
+
+  <span class="s3">// Creates a win32 window with |title| that is positioned and sized using</span>
+  <span class="s3">// |origin| and |size|. New windows are created on the default monitor. Window</span>
+  <span class="s3">// sizes are specified to the OS in physical pixels, hence to ensure a</span>
+  <span class="s3">// consistent size this function will scale the inputted width and height as</span>
+  <span class="s3">// as appropriate for the default monitor. The window is invisible until</span>
+  <span class="s3">// |Show| is called. Returns true if the window was created successfully.</span>
+  <span class="s0">bool </span><span class="s1">Create(</span><span class="s0">const </span><span class="s1">std::wstring&amp; title, </span><span class="s0">const </span><span class="s1">Point&amp; origin, </span><span class="s0">const </span><span class="s1">Size&amp; size);</span>
+
+  <span class="s3">// Show the current window. Returns true if the window was successfully shown.</span>
+  <span class="s0">bool </span><span class="s1">Show();</span>
+
+  <span class="s3">// Release OS resources associated with window.</span>
+  <span class="s0">void </span><span class="s1">Destroy();</span>
+
+  <span class="s3">// Inserts |content| into the window tree.</span>
+  <span class="s0">void </span><span class="s1">SetChildContent(HWND content);</span>
+
+  <span class="s3">// Returns the backing Window handle to enable clients to set icon and other</span>
+  <span class="s3">// window properties. Returns nullptr if the window has been destroyed.</span>
+  <span class="s1">HWND GetHandle();</span>
+
+  <span class="s3">// If true, closing this window will quit the application.</span>
+  <span class="s0">void </span><span class="s1">SetQuitOnClose(</span><span class="s0">bool </span><span class="s1">quit_on_close);</span>
+
+  <span class="s3">// Return a RECT representing the bounds of the current client area.</span>
+  <span class="s1">RECT GetClientArea();</span>
+
+ <span class="s0">protected</span><span class="s1">:</span>
+  <span class="s3">// Processes and route salient window messages for mouse handling,</span>
+  <span class="s3">// size change and DPI. Delegates handling of these to member overloads that</span>
+  <span class="s3">// inheriting classes can handle.</span>
+  <span class="s0">virtual </span><span class="s1">LRESULT MessageHandler(HWND window,</span>
+                                 <span class="s1">UINT </span><span class="s0">const </span><span class="s1">message,</span>
+                                 <span class="s1">WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                                 <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept</span><span class="s1">;</span>
+
+  <span class="s3">// Called when CreateAndShow is called, allowing subclass window-related</span>
+  <span class="s3">// setup. Subclasses should return false if setup fails.</span>
+  <span class="s0">virtual bool </span><span class="s1">OnCreate();</span>
+
+  <span class="s3">// Called when Destroy is called.</span>
+  <span class="s0">virtual void </span><span class="s1">OnDestroy();</span>
+
+ <span class="s0">private</span><span class="s1">:</span>
+  <span class="s0">friend class </span><span class="s1">WindowClassRegistrar;</span>
+
+  <span class="s3">// OS callback called by message pump. Handles the WM_NCCREATE message which</span>
+  <span class="s3">// is passed when the non-client area is being created and enables automatic</span>
+  <span class="s3">// non-client DPI scaling so that the non-client area automatically</span>
+  <span class="s3">// responds to changes in DPI. All other messages are handled by</span>
+  <span class="s3">// MessageHandler.</span>
+  <span class="s0">static </span><span class="s1">LRESULT CALLBACK WndProc(HWND </span><span class="s0">const </span><span class="s1">window,</span>
+                                  <span class="s1">UINT </span><span class="s0">const </span><span class="s1">message,</span>
+                                  <span class="s1">WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                                  <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept</span><span class="s1">;</span>
+
+  <span class="s3">// Retrieves a class instance pointer for |window|</span>
+  <span class="s0">static </span><span class="s1">Win32Window* GetThisFromHandle(HWND </span><span class="s0">const </span><span class="s1">window) </span><span class="s0">noexcept</span><span class="s1">;</span>
+
+  <span class="s3">// Update the window frame's theme to match the system theme.</span>
+  <span class="s0">static void </span><span class="s1">UpdateTheme(HWND </span><span class="s0">const </span><span class="s1">window);</span>
+
+  <span class="s0">bool </span><span class="s1">quit_on_close_ = </span><span class="s0">false</span><span class="s1">;</span>
+
+  <span class="s3">// window handle for top level window.</span>
+  <span class="s1">HWND window_handle_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+
+  <span class="s3">// window handle for hosted content.</span>
+  <span class="s1">HWND child_content_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+<span class="s1">};</span>
+
+<span class="s0">#endif  </span><span class="s3">// RUNNER_WIN32_WINDOW_H_</span>
+</pre>
+</body>
+</html>

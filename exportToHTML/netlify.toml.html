@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>netlify.toml</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #d55fde; font-style: italic;}
+.s2 { color: #89ca78;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+netlify.toml</font>
+</center></td></tr></table>
+<pre><span class="s0">[[</span><span class="s1">plugins</span><span class="s0">]]</span>
+<span class="s1">package </span><span class="s0">= </span><span class="s2">&quot;netlify-plugin-flutter&quot;</span>
+   <span class="s0">[</span><span class="s1">plugins</span><span class="s0">.</span><span class="s1">inputs</span><span class="s0">]</span>
+    <span class="s1">channel </span><span class="s0">= </span><span class="s2">&quot;stable&quot;</span>
+<span class="s0">[</span><span class="s1">build</span><span class="s0">]</span>
+<span class="s1">command </span><span class="s0">= </span><span class="s2">&quot;flutter build web --release&quot;</span>
+<span class="s1">publish </span><span class="s0">= </span><span class="s2">&quot;build/web&quot;</span></pre>
+</body>
+</html>

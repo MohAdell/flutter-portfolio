@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Podfile</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #2bbac5;}
+.s2 { color: #d55fde;}
+.s3 { color: #89ca78;}
+.s4 { color: #5c6370; font-style: italic;}
+.s5 { color: #bbbbbb;}
+.s6 { color: #d55fde; font-style: italic;}
+.s7 { color: #61afef;}
+.s8 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Podfile</font>
+</center></td></tr></table>
+<pre><span class="s0">platform </span><span class="s1">:osx</span><span class="s0">, </span><span class="s2">'</span><span class="s3">10.11'</span>
+
+<span class="s4"># CocoaPods analytics sends network stats synchronously affecting flutter build latency. 
+</span><span class="s5">ENV</span><span class="s0">[</span><span class="s2">'</span><span class="s3">COCOAPODS_DISABLE_STATS'</span><span class="s0">] </span><span class="s6">= </span><span class="s2">'</span><span class="s3">true'</span>
+
+<span class="s0">project </span><span class="s2">'</span><span class="s3">Runner'</span><span class="s0">, {</span>
+  <span class="s2">'</span><span class="s3">Debug' </span><span class="s0">=&gt; </span><span class="s1">:debug</span><span class="s0">,</span>
+  <span class="s2">'</span><span class="s3">Profile' </span><span class="s0">=&gt; </span><span class="s1">:release</span><span class="s0">,</span>
+  <span class="s2">'</span><span class="s3">Release' </span><span class="s0">=&gt; </span><span class="s1">:release</span><span class="s0">,</span>
+<span class="s0">}</span>
+
+<span class="s6">def </span><span class="s7">flutter_root</span>
+  <span class="s0">generated_xcode_build_settings_path </span><span class="s6">= </span><span class="s0">File.expand_path(File.join(</span><span class="s2">'</span><span class="s3">..'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">Flutter'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">ephemeral'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">Flutter-Generated.xcconfig'</span><span class="s0">), </span><span class="s5">__FILE__</span><span class="s0">)</span>
+  <span class="s6">unless </span><span class="s0">File.exist?(generated_xcode_build_settings_path)</span>
+    <span class="s6">raise </span><span class="s2">&quot;</span><span class="s0">#{generated_xcode_build_settings_path} </span><span class="s3">must exist. If you're running pod install manually, make sure </span><span class="s1">\&quot;</span><span class="s3">flutter pub get</span><span class="s1">\&quot; </span><span class="s3">is executed first&quot;</span>
+  <span class="s6">end</span>
+
+  <span class="s0">File.foreach(generated_xcode_build_settings_path) </span><span class="s6">do </span><span class="s0">|</span><span class="s5">line</span><span class="s0">|</span>
+    <span class="s0">matches </span><span class="s6">= </span><span class="s0">line.match(</span><span class="s1">/FLUTTER_ROOT\=(.*)/</span><span class="s0">)</span>
+    <span class="s6">return </span><span class="s0">matches[</span><span class="s8">1</span><span class="s0">].strip </span><span class="s6">if </span><span class="s0">matches 
+  </span><span class="s6">end</span>
+  <span class="s6">raise </span><span class="s2">&quot;</span><span class="s3">FLUTTER_ROOT not found in </span><span class="s0">#{generated_xcode_build_settings_path}</span><span class="s3">. Try deleting Flutter-Generated.xcconfig, then run </span><span class="s1">\&quot;</span><span class="s3">flutter pub get</span><span class="s1">\&quot;</span><span class="s3">&quot;</span>
+<span class="s6">end</span>
+
+<span class="s6">require </span><span class="s0">File.expand_path(File.join(</span><span class="s2">'</span><span class="s3">packages'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">flutter_tools'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">bin'</span><span class="s0">, </span><span class="s2">'</span><span class="s3">podhelper'</span><span class="s0">), flutter_root)</span>
+
+<span class="s0">flutter_macos_podfile_setup 
+</span>
+<span class="s0">target </span><span class="s2">'</span><span class="s3">Runner' </span><span class="s6">do</span>
+  <span class="s0">use_frameworks! 
+  use_modular_headers! 
+</span>
+  <span class="s0">flutter_install_all_macos_pods File.dirname(File.realpath(</span><span class="s5">__FILE__</span><span class="s0">))</span>
+<span class="s6">end</span>
+
+<span class="s0">post_install </span><span class="s6">do </span><span class="s0">|</span><span class="s5">installer</span><span class="s0">|</span>
+  <span class="s0">installer.pods_project.targets.each </span><span class="s6">do </span><span class="s0">|</span><span class="s5">target</span><span class="s0">|</span>
+    <span class="s0">flutter_additional_macos_build_settings(target)</span>
+  <span class="s6">end</span>
+<span class="s6">end</span>
+</pre>
+</body>
+</html>

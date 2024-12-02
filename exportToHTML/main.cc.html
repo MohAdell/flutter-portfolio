@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>main.cc</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.cc</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&quot;my_application.h&quot;</span>
+
+<span class="s0">int </span><span class="s1">main(</span><span class="s0">int </span><span class="s1">argc, </span><span class="s0">char</span><span class="s1">** argv) {</span>
+  <span class="s1">g_autoptr(MyApplication) app = my_application_new();</span>
+  <span class="s0">return </span><span class="s1">g_application_run(G_APPLICATION(app), argc, argv);</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

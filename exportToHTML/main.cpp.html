@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>main.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+.s4 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.cpp</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&lt;flutter/dart_project.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;flutter/flutter_view_controller.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;windows.h&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&quot;flutter_window.h&quot;</span>
+<span class="s0">#include </span><span class="s2">&quot;utils.h&quot;</span>
+
+<span class="s0">int </span><span class="s1">APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,</span>
+                      <span class="s1">_In_ </span><span class="s0">wchar_t </span><span class="s1">*command_line, _In_ </span><span class="s0">int </span><span class="s1">show_command) {</span>
+  <span class="s3">// Attach to console when present (e.g., 'flutter run') or create a</span>
+  <span class="s3">// new console when running with a debugger.</span>
+  <span class="s0">if </span><span class="s1">(!::AttachConsole(ATTACH_PARENT_PROCESS) &amp;&amp; ::IsDebuggerPresent()) {</span>
+    <span class="s1">CreateAndAttachConsole();</span>
+  <span class="s1">}</span>
+
+  <span class="s3">// Initialize COM, so that it is available for use in the library and/or</span>
+  <span class="s3">// plugins.</span>
+  <span class="s1">::CoInitializeEx(</span><span class="s0">nullptr</span><span class="s1">, COINIT_APARTMENTTHREADED);</span>
+
+  <span class="s1">flutter::DartProject project(</span><span class="s0">L</span><span class="s2">&quot;data&quot;</span><span class="s1">);</span>
+
+  <span class="s1">std::vector&lt;std::string&gt; command_line_arguments =</span>
+      <span class="s1">GetCommandLineArguments();</span>
+
+  <span class="s1">project.set_dart_entrypoint_arguments(std::move(command_line_arguments));</span>
+
+  <span class="s1">FlutterWindow window(project);</span>
+  <span class="s1">Win32Window::Point origin(</span><span class="s4">10</span><span class="s1">, </span><span class="s4">10</span><span class="s1">);</span>
+  <span class="s1">Win32Window::Size size(</span><span class="s4">1280</span><span class="s1">, </span><span class="s4">720</span><span class="s1">);</span>
+  <span class="s0">if </span><span class="s1">(!window.Create(</span><span class="s0">L</span><span class="s2">&quot;flutter_website&quot;</span><span class="s1">, origin, size)) {</span>
+    <span class="s0">return </span><span class="s1">EXIT_FAILURE;</span>
+  <span class="s1">}</span>
+  <span class="s1">window.SetQuitOnClose(</span><span class="s0">true</span><span class="s1">);</span>
+
+  <span class="s1">::MSG msg;</span>
+  <span class="s0">while </span><span class="s1">(::GetMessage(&amp;msg, </span><span class="s0">nullptr</span><span class="s1">, </span><span class="s4">0</span><span class="s1">, </span><span class="s4">0</span><span class="s1">)) {</span>
+    <span class="s1">::TranslateMessage(&amp;msg);</span>
+    <span class="s1">::DispatchMessage(&amp;msg);</span>
+  <span class="s1">}</span>
+
+  <span class="s1">::CoUninitialize();</span>
+  <span class="s0">return </span><span class="s1">EXIT_SUCCESS;</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

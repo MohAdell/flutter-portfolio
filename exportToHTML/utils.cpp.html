@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>utils.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #d19a66;}
+.s4 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+utils.cpp</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&quot;utils.h&quot;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;flutter_windows.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;io.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;stdio.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;windows.h&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;iostream&gt;</span>
+
+<span class="s0">void </span><span class="s1">CreateAndAttachConsole() {</span>
+  <span class="s0">if </span><span class="s1">(::AllocConsole()) {</span>
+    <span class="s1">FILE *unused;</span>
+    <span class="s0">if </span><span class="s1">(freopen_s(&amp;unused, </span><span class="s2">&quot;CONOUT$&quot;</span><span class="s1">, </span><span class="s2">&quot;w&quot;</span><span class="s1">, stdout)) {</span>
+      <span class="s1">_dup2(_fileno(stdout), </span><span class="s3">1</span><span class="s1">);</span>
+    <span class="s1">}</span>
+    <span class="s0">if </span><span class="s1">(freopen_s(&amp;unused, </span><span class="s2">&quot;CONOUT$&quot;</span><span class="s1">, </span><span class="s2">&quot;w&quot;</span><span class="s1">, stderr)) {</span>
+      <span class="s1">_dup2(_fileno(stdout), </span><span class="s3">2</span><span class="s1">);</span>
+    <span class="s1">}</span>
+    <span class="s1">std::ios::sync_with_stdio();</span>
+    <span class="s1">FlutterDesktopResyncOutputStreams();</span>
+  <span class="s1">}</span>
+<span class="s1">}</span>
+
+<span class="s1">std::vector&lt;std::string&gt; GetCommandLineArguments() {</span>
+  <span class="s4">// Convert the UTF-16 command line arguments to UTF-8 for the Engine to use.</span>
+  <span class="s0">int </span><span class="s1">argc;</span>
+  <span class="s0">wchar_t</span><span class="s1">** argv = ::CommandLineToArgvW(::GetCommandLineW(), &amp;argc);</span>
+  <span class="s0">if </span><span class="s1">(argv == </span><span class="s0">nullptr</span><span class="s1">) {</span>
+    <span class="s0">return </span><span class="s1">std::vector&lt;std::string&gt;();</span>
+  <span class="s1">}</span>
+
+  <span class="s1">std::vector&lt;std::string&gt; command_line_arguments;</span>
+
+  <span class="s4">// Skip the first argument as it's the binary name.</span>
+  <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">1</span><span class="s1">; i &lt; argc; i++) {</span>
+    <span class="s1">command_line_arguments.push_back(Utf8FromUtf16(argv[i]));</span>
+  <span class="s1">}</span>
+
+  <span class="s1">::LocalFree(argv);</span>
+
+  <span class="s0">return </span><span class="s1">command_line_arguments;</span>
+<span class="s1">}</span>
+
+<span class="s1">std::string Utf8FromUtf16(</span><span class="s0">const wchar_t</span><span class="s1">* utf16_string) {</span>
+  <span class="s0">if </span><span class="s1">(utf16_string == </span><span class="s0">nullptr</span><span class="s1">) {</span>
+    <span class="s0">return </span><span class="s1">std::string();</span>
+  <span class="s1">}</span>
+  <span class="s0">int </span><span class="s1">target_length = ::WideCharToMultiByte(</span>
+      <span class="s1">CP_UTF8, WC_ERR_INVALID_CHARS, utf16_string,</span>
+      <span class="s1">-</span><span class="s3">1</span><span class="s1">, </span><span class="s0">nullptr</span><span class="s1">, </span><span class="s3">0</span><span class="s1">, </span><span class="s0">nullptr</span><span class="s1">, </span><span class="s0">nullptr</span><span class="s1">)</span>
+    <span class="s1">-</span><span class="s3">1</span><span class="s1">; </span><span class="s4">// remove the trailing null character</span>
+  <span class="s0">int </span><span class="s1">input_length = (</span><span class="s0">int</span><span class="s1">)wcslen(utf16_string);</span>
+  <span class="s1">std::string utf8_string;</span>
+  <span class="s0">if </span><span class="s1">(target_length &lt;= </span><span class="s3">0 </span><span class="s1">|| target_length &gt; utf8_string.max_size()) {</span>
+    <span class="s0">return </span><span class="s1">utf8_string;</span>
+  <span class="s1">}</span>
+  <span class="s1">utf8_string.resize(target_length);</span>
+  <span class="s0">int </span><span class="s1">converted_length = ::WideCharToMultiByte(</span>
+      <span class="s1">CP_UTF8, WC_ERR_INVALID_CHARS, utf16_string,</span>
+      <span class="s1">input_length, utf8_string.data(), target_length, </span><span class="s0">nullptr</span><span class="s1">, </span><span class="s0">nullptr</span><span class="s1">);</span>
+  <span class="s0">if </span><span class="s1">(converted_length == </span><span class="s3">0</span><span class="s1">) {</span>
+    <span class="s0">return </span><span class="s1">std::string();</span>
+  <span class="s1">}</span>
+  <span class="s0">return </span><span class="s1">utf8_string;</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<html>
+<head>
+<title>win32_window.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+.s4 { color: #d19a66;}
+.s5 { color: #2bbac5;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+win32_window.cpp</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&quot;win32_window.h&quot;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;dwmapi.h&gt;</span>
+<span class="s0">#include </span><span class="s2">&lt;flutter_windows.h&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&quot;resource.h&quot;</span>
+
+<span class="s0">namespace </span><span class="s1">{</span>
+
+<span class="s3">/// Window attribute that enables dark mode window decorations.</span>
+<span class="s3">///</span>
+<span class="s3">/// Redefined in case the developer's machine has a Windows SDK older than</span>
+<span class="s3">/// version 10.0.22000.0.</span>
+<span class="s3">/// See: https://docs.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute</span>
+<span class="s0">#ifndef </span><span class="s1">DWMWA_USE_IMMERSIVE_DARK_MODE</span>
+<span class="s0">#define </span><span class="s1">DWMWA_USE_IMMERSIVE_DARK_MODE </span><span class="s4">20</span>
+<span class="s0">#endif</span>
+
+<span class="s0">constexpr const wchar_t </span><span class="s1">kWindowClassName[] = </span><span class="s0">L</span><span class="s2">&quot;FLUTTER_RUNNER_WIN32_WINDOW&quot;</span><span class="s1">;</span>
+
+<span class="s3">/// Registry key for app theme preference.</span>
+<span class="s3">///</span>
+<span class="s3">/// A value of 0 indicates apps should use dark mode. A non-zero or missing</span>
+<span class="s3">/// value indicates apps should use light mode.</span>
+<span class="s0">constexpr const wchar_t </span><span class="s1">kGetPreferredBrightnessRegKey[] =</span>
+  <span class="s0">L</span><span class="s2">&quot;Software</span><span class="s5">\\</span><span class="s2">Microsoft</span><span class="s5">\\</span><span class="s2">Windows</span><span class="s5">\\</span><span class="s2">CurrentVersion</span><span class="s5">\\</span><span class="s2">Themes</span><span class="s5">\\</span><span class="s2">Personalize&quot;</span><span class="s1">;</span>
+<span class="s0">constexpr const wchar_t </span><span class="s1">kGetPreferredBrightnessRegValue[] = </span><span class="s0">L</span><span class="s2">&quot;AppsUseLightTheme&quot;</span><span class="s1">;</span>
+
+<span class="s3">// The number of Win32Window objects that currently exist.</span>
+<span class="s0">static int </span><span class="s1">g_active_window_count = </span><span class="s4">0</span><span class="s1">;</span>
+
+<span class="s0">using </span><span class="s1">EnableNonClientDpiScaling = BOOL </span><span class="s0">__stdcall</span><span class="s1">(HWND hwnd);</span>
+
+<span class="s3">// Scale helper to convert logical scaler values to physical using passed in</span>
+<span class="s3">// scale factor</span>
+<span class="s0">int </span><span class="s1">Scale(</span><span class="s0">int </span><span class="s1">source, </span><span class="s0">double </span><span class="s1">scale_factor) {</span>
+  <span class="s0">return static_cast</span><span class="s1">&lt;</span><span class="s0">int</span><span class="s1">&gt;(source * scale_factor);</span>
+<span class="s1">}</span>
+
+<span class="s3">// Dynamically loads the |EnableNonClientDpiScaling| from the User32 module.</span>
+<span class="s3">// This API is only needed for PerMonitor V1 awareness mode.</span>
+<span class="s0">void </span><span class="s1">EnableFullDpiSupportIfAvailable(HWND hwnd) {</span>
+  <span class="s1">HMODULE user32_module = LoadLibraryA(</span><span class="s2">&quot;User32.dll&quot;</span><span class="s1">);</span>
+  <span class="s0">if </span><span class="s1">(!user32_module) {</span>
+    <span class="s0">return</span><span class="s1">;</span>
+  <span class="s1">}</span>
+  <span class="s0">auto </span><span class="s1">enable_non_client_dpi_scaling =</span>
+      <span class="s0">reinterpret_cast</span><span class="s1">&lt;EnableNonClientDpiScaling*&gt;(</span>
+          <span class="s1">GetProcAddress(user32_module, </span><span class="s2">&quot;EnableNonClientDpiScaling&quot;</span><span class="s1">));</span>
+  <span class="s0">if </span><span class="s1">(enable_non_client_dpi_scaling != </span><span class="s0">nullptr</span><span class="s1">) {</span>
+    <span class="s1">enable_non_client_dpi_scaling(hwnd);</span>
+  <span class="s1">}</span>
+  <span class="s1">FreeLibrary(user32_module);</span>
+<span class="s1">}</span>
+
+<span class="s1">}  </span><span class="s3">// namespace</span>
+
+<span class="s3">// Manages the Win32Window's window class registration.</span>
+<span class="s0">class </span><span class="s1">WindowClassRegistrar {</span>
+ <span class="s0">public</span><span class="s1">:</span>
+  <span class="s1">~WindowClassRegistrar() = </span><span class="s0">default</span><span class="s1">;</span>
+
+  <span class="s3">// Returns the singleton registrar instance.</span>
+  <span class="s0">static </span><span class="s1">WindowClassRegistrar* GetInstance() {</span>
+    <span class="s0">if </span><span class="s1">(!instance_) {</span>
+      <span class="s1">instance_ = </span><span class="s0">new </span><span class="s1">WindowClassRegistrar();</span>
+    <span class="s1">}</span>
+    <span class="s0">return </span><span class="s1">instance_;</span>
+  <span class="s1">}</span>
+
+  <span class="s3">// Returns the name of the window class, registering the class if it hasn't</span>
+  <span class="s3">// previously been registered.</span>
+  <span class="s0">const wchar_t</span><span class="s1">* GetWindowClass();</span>
+
+  <span class="s3">// Unregisters the window class. Should only be called if there are no</span>
+  <span class="s3">// instances of the window.</span>
+  <span class="s0">void </span><span class="s1">UnregisterWindowClass();</span>
+
+ <span class="s0">private</span><span class="s1">:</span>
+  <span class="s1">WindowClassRegistrar() = </span><span class="s0">default</span><span class="s1">;</span>
+
+  <span class="s0">static </span><span class="s1">WindowClassRegistrar* instance_;</span>
+
+  <span class="s0">bool </span><span class="s1">class_registered_ = </span><span class="s0">false</span><span class="s1">;</span>
+<span class="s1">};</span>
+
+<span class="s1">WindowClassRegistrar* WindowClassRegistrar::instance_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+
+<span class="s0">const wchar_t</span><span class="s1">* WindowClassRegistrar::GetWindowClass() {</span>
+  <span class="s0">if </span><span class="s1">(!class_registered_) {</span>
+    <span class="s1">WNDCLASS window_class{};</span>
+    <span class="s1">window_class.hCursor = LoadCursor(</span><span class="s0">nullptr</span><span class="s1">, IDC_ARROW);</span>
+    <span class="s1">window_class.lpszClassName = kWindowClassName;</span>
+    <span class="s1">window_class.style = CS_HREDRAW | CS_VREDRAW;</span>
+    <span class="s1">window_class.cbClsExtra = </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">window_class.cbWndExtra = </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">window_class.hInstance = GetModuleHandle(</span><span class="s0">nullptr</span><span class="s1">);</span>
+    <span class="s1">window_class.hIcon =</span>
+        <span class="s1">LoadIcon(window_class.hInstance, MAKEINTRESOURCE(IDI_APP_ICON));</span>
+    <span class="s1">window_class.hbrBackground = </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">window_class.lpszMenuName = </span><span class="s0">nullptr</span><span class="s1">;</span>
+    <span class="s1">window_class.lpfnWndProc = Win32Window::WndProc;</span>
+    <span class="s1">RegisterClass(&amp;window_class);</span>
+    <span class="s1">class_registered_ = </span><span class="s0">true</span><span class="s1">;</span>
+  <span class="s1">}</span>
+  <span class="s0">return </span><span class="s1">kWindowClassName;</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">WindowClassRegistrar::UnregisterWindowClass() {</span>
+  <span class="s1">UnregisterClass(kWindowClassName, </span><span class="s0">nullptr</span><span class="s1">);</span>
+  <span class="s1">class_registered_ = </span><span class="s0">false</span><span class="s1">;</span>
+<span class="s1">}</span>
+
+<span class="s1">Win32Window::Win32Window() {</span>
+  <span class="s1">++g_active_window_count;</span>
+<span class="s1">}</span>
+
+<span class="s1">Win32Window::~Win32Window() {</span>
+  <span class="s1">--g_active_window_count;</span>
+  <span class="s1">Destroy();</span>
+<span class="s1">}</span>
+
+<span class="s0">bool </span><span class="s1">Win32Window::Create(</span><span class="s0">const </span><span class="s1">std::wstring&amp; title,</span>
+                         <span class="s0">const </span><span class="s1">Point&amp; origin,</span>
+                         <span class="s0">const </span><span class="s1">Size&amp; size) {</span>
+  <span class="s1">Destroy();</span>
+
+  <span class="s0">const wchar_t</span><span class="s1">* window_class =</span>
+      <span class="s1">WindowClassRegistrar::GetInstance()-&gt;GetWindowClass();</span>
+
+  <span class="s0">const </span><span class="s1">POINT target_point = {</span><span class="s0">static_cast</span><span class="s1">&lt;LONG&gt;(origin.x),</span>
+                              <span class="s0">static_cast</span><span class="s1">&lt;LONG&gt;(origin.y)};</span>
+  <span class="s1">HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);</span>
+  <span class="s1">UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);</span>
+  <span class="s0">double </span><span class="s1">scale_factor = dpi / </span><span class="s4">96.0</span><span class="s1">;</span>
+
+  <span class="s1">HWND window = CreateWindow(</span>
+      <span class="s1">window_class, title.c_str(), WS_OVERLAPPEDWINDOW,</span>
+      <span class="s1">Scale(origin.x, scale_factor), Scale(origin.y, scale_factor),</span>
+      <span class="s1">Scale(size.width, scale_factor), Scale(size.height, scale_factor),</span>
+      <span class="s0">nullptr</span><span class="s1">, </span><span class="s0">nullptr</span><span class="s1">, GetModuleHandle(</span><span class="s0">nullptr</span><span class="s1">), </span><span class="s0">this</span><span class="s1">);</span>
+
+  <span class="s0">if </span><span class="s1">(!window) {</span>
+    <span class="s0">return false</span><span class="s1">;</span>
+  <span class="s1">}</span>
+
+  <span class="s1">UpdateTheme(window);</span>
+
+  <span class="s0">return </span><span class="s1">OnCreate();</span>
+<span class="s1">}</span>
+
+<span class="s0">bool </span><span class="s1">Win32Window::Show() {</span>
+  <span class="s0">return </span><span class="s1">ShowWindow(window_handle_, SW_SHOWNORMAL);</span>
+<span class="s1">}</span>
+
+<span class="s3">// static</span>
+<span class="s1">LRESULT CALLBACK Win32Window::WndProc(HWND </span><span class="s0">const </span><span class="s1">window,</span>
+                                      <span class="s1">UINT </span><span class="s0">const </span><span class="s1">message,</span>
+                                      <span class="s1">WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                                      <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept </span><span class="s1">{</span>
+  <span class="s0">if </span><span class="s1">(message == WM_NCCREATE) {</span>
+    <span class="s0">auto </span><span class="s1">window_struct = </span><span class="s0">reinterpret_cast</span><span class="s1">&lt;CREATESTRUCT*&gt;(lparam);</span>
+    <span class="s1">SetWindowLongPtr(window, GWLP_USERDATA,</span>
+                     <span class="s0">reinterpret_cast</span><span class="s1">&lt;LONG_PTR&gt;(window_struct-&gt;lpCreateParams));</span>
+
+    <span class="s0">auto </span><span class="s1">that = </span><span class="s0">static_cast</span><span class="s1">&lt;Win32Window*&gt;(window_struct-&gt;lpCreateParams);</span>
+    <span class="s1">EnableFullDpiSupportIfAvailable(window);</span>
+    <span class="s1">that-&gt;window_handle_ = window;</span>
+  <span class="s1">} </span><span class="s0">else if </span><span class="s1">(Win32Window* that = GetThisFromHandle(window)) {</span>
+    <span class="s0">return </span><span class="s1">that-&gt;MessageHandler(window, message, wparam, lparam);</span>
+  <span class="s1">}</span>
+
+  <span class="s0">return </span><span class="s1">DefWindowProc(window, message, wparam, lparam);</span>
+<span class="s1">}</span>
+
+<span class="s1">LRESULT</span>
+<span class="s1">Win32Window::MessageHandler(HWND hwnd,</span>
+                            <span class="s1">UINT </span><span class="s0">const </span><span class="s1">message,</span>
+                            <span class="s1">WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                            <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept </span><span class="s1">{</span>
+  <span class="s0">switch </span><span class="s1">(message) {</span>
+    <span class="s0">case </span><span class="s1">WM_DESTROY:</span>
+      <span class="s1">window_handle_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+      <span class="s1">Destroy();</span>
+      <span class="s0">if </span><span class="s1">(quit_on_close_) {</span>
+        <span class="s1">PostQuitMessage(</span><span class="s4">0</span><span class="s1">);</span>
+      <span class="s1">}</span>
+      <span class="s0">return </span><span class="s4">0</span><span class="s1">;</span>
+
+    <span class="s0">case </span><span class="s1">WM_DPICHANGED: {</span>
+      <span class="s0">auto </span><span class="s1">newRectSize = </span><span class="s0">reinterpret_cast</span><span class="s1">&lt;RECT*&gt;(lparam);</span>
+      <span class="s1">LONG newWidth = newRectSize-&gt;right - newRectSize-&gt;left;</span>
+      <span class="s1">LONG newHeight = newRectSize-&gt;bottom - newRectSize-&gt;top;</span>
+
+      <span class="s1">SetWindowPos(hwnd, </span><span class="s0">nullptr</span><span class="s1">, newRectSize-&gt;left, newRectSize-&gt;top, newWidth,</span>
+                   <span class="s1">newHeight, SWP_NOZORDER | SWP_NOACTIVATE);</span>
+
+      <span class="s0">return </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">}</span>
+    <span class="s0">case </span><span class="s1">WM_SIZE: {</span>
+      <span class="s1">RECT rect = GetClientArea();</span>
+      <span class="s0">if </span><span class="s1">(child_content_ != </span><span class="s0">nullptr</span><span class="s1">) {</span>
+        <span class="s3">// Size and position the child window.</span>
+        <span class="s1">MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,</span>
+                   <span class="s1">rect.bottom - rect.top, TRUE);</span>
+      <span class="s1">}</span>
+      <span class="s0">return </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">case </span><span class="s1">WM_ACTIVATE:</span>
+      <span class="s0">if </span><span class="s1">(child_content_ != </span><span class="s0">nullptr</span><span class="s1">) {</span>
+        <span class="s1">SetFocus(child_content_);</span>
+      <span class="s1">}</span>
+      <span class="s0">return </span><span class="s4">0</span><span class="s1">;</span>
+
+    <span class="s0">case </span><span class="s1">WM_DWMCOLORIZATIONCOLORCHANGED:</span>
+      <span class="s1">UpdateTheme(hwnd);</span>
+      <span class="s0">return </span><span class="s4">0</span><span class="s1">;</span>
+  <span class="s1">}</span>
+
+  <span class="s0">return </span><span class="s1">DefWindowProc(window_handle_, message, wparam, lparam);</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">Win32Window::Destroy() {</span>
+  <span class="s1">OnDestroy();</span>
+
+  <span class="s0">if </span><span class="s1">(window_handle_) {</span>
+    <span class="s1">DestroyWindow(window_handle_);</span>
+    <span class="s1">window_handle_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+  <span class="s1">}</span>
+  <span class="s0">if </span><span class="s1">(g_active_window_count == </span><span class="s4">0</span><span class="s1">) {</span>
+    <span class="s1">WindowClassRegistrar::GetInstance()-&gt;UnregisterWindowClass();</span>
+  <span class="s1">}</span>
+<span class="s1">}</span>
+
+<span class="s1">Win32Window* Win32Window::GetThisFromHandle(HWND </span><span class="s0">const </span><span class="s1">window) </span><span class="s0">noexcept </span><span class="s1">{</span>
+  <span class="s0">return reinterpret_cast</span><span class="s1">&lt;Win32Window*&gt;(</span>
+      <span class="s1">GetWindowLongPtr(window, GWLP_USERDATA));</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">Win32Window::SetChildContent(HWND content) {</span>
+  <span class="s1">child_content_ = content;</span>
+  <span class="s1">SetParent(content, window_handle_);</span>
+  <span class="s1">RECT frame = GetClientArea();</span>
+
+  <span class="s1">MoveWindow(content, frame.left, frame.top, frame.right - frame.left,</span>
+             <span class="s1">frame.bottom - frame.top, </span><span class="s0">true</span><span class="s1">);</span>
+
+  <span class="s1">SetFocus(child_content_);</span>
+<span class="s1">}</span>
+
+<span class="s1">RECT Win32Window::GetClientArea() {</span>
+  <span class="s1">RECT frame;</span>
+  <span class="s1">GetClientRect(window_handle_, &amp;frame);</span>
+  <span class="s0">return </span><span class="s1">frame;</span>
+<span class="s1">}</span>
+
+<span class="s1">HWND Win32Window::GetHandle() {</span>
+  <span class="s0">return </span><span class="s1">window_handle_;</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">Win32Window::SetQuitOnClose(</span><span class="s0">bool </span><span class="s1">quit_on_close) {</span>
+  <span class="s1">quit_on_close_ = quit_on_close;</span>
+<span class="s1">}</span>
+
+<span class="s0">bool </span><span class="s1">Win32Window::OnCreate() {</span>
+  <span class="s3">// No-op; provided for subclasses.</span>
+  <span class="s0">return true</span><span class="s1">;</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">Win32Window::OnDestroy() {</span>
+  <span class="s3">// No-op; provided for subclasses.</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">Win32Window::UpdateTheme(HWND </span><span class="s0">const </span><span class="s1">window) {</span>
+  <span class="s1">DWORD light_mode;</span>
+  <span class="s1">DWORD light_mode_size = </span><span class="s0">sizeof</span><span class="s1">(light_mode);</span>
+  <span class="s1">LSTATUS result = RegGetValue(HKEY_CURRENT_USER, kGetPreferredBrightnessRegKey,</span>
+                               <span class="s1">kGetPreferredBrightnessRegValue,</span>
+                               <span class="s1">RRF_RT_REG_DWORD, </span><span class="s0">nullptr</span><span class="s1">, &amp;light_mode,</span>
+                               <span class="s1">&amp;light_mode_size);</span>
+
+  <span class="s0">if </span><span class="s1">(result == ERROR_SUCCESS) {</span>
+    <span class="s1">BOOL enable_dark_mode = light_mode == </span><span class="s4">0</span><span class="s1">;</span>
+    <span class="s1">DwmSetWindowAttribute(window, DWMWA_USE_IMMERSIVE_DARK_MODE,</span>
+                          <span class="s1">&amp;enable_dark_mode, </span><span class="s0">sizeof</span><span class="s1">(enable_dark_mode));</span>
+  <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

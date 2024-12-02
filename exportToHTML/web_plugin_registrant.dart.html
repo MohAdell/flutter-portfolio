@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>web_plugin_registrant.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #5c6370; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #d55fde; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+web_plugin_registrant.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">// Flutter web plugin registrant file.</span>
+<span class="s0">//</span>
+<span class="s0">// Generated file. Do not edit.</span>
+<span class="s0">//</span>
+
+<span class="s0">// @dart = 2.13</span>
+<span class="s0">// ignore_for_file: type=lint</span>
+
+<span class="s1">import </span><span class="s2">'package:url_launcher_web/url_launcher_web.dart'</span><span class="s1">;</span>
+<span class="s1">import </span><span class="s2">'package:flutter_web_plugins/flutter_web_plugins.dart'</span><span class="s1">;</span>
+
+<span class="s3">void </span><span class="s1">registerPlugins([</span><span class="s3">final </span><span class="s1">Registrar? pluginRegistrar]) {</span>
+  <span class="s3">final </span><span class="s1">Registrar registrar = pluginRegistrar ?? webPluginRegistrar;</span>
+  <span class="s1">UrlLauncherPlugin.registerWith(registrar);</span>
+  <span class="s1">registrar.registerMessageHandler();</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

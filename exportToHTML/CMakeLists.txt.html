@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>CMakeLists.txt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #5c6370; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #ffc66d;}
+.s3 { color: #bbbbbb;}
+.s4 { color: #89ca78;}
+.s5 { color: #2bbac5;}
+.s6 { color: #d55fde; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+CMakeLists.txt</font>
+</center></td></tr></table>
+<pre><span class="s0"># This file controls Flutter-level build steps. It should not be edited.</span>
+<span class="s2">cmake_minimum_required</span><span class="s1">(</span><span class="s3">VERSION 3.14</span><span class="s1">)</span>
+
+<span class="s2">set</span><span class="s1">(</span><span class="s3">EPHEMERAL_DIR </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">CMAKE_CURRENT_SOURCE_DIR</span><span class="s5">}</span><span class="s3">/ephemeral</span><span class="s4">&quot;</span><span class="s1">)</span>
+
+<span class="s0"># Configuration provided via flutter tool.</span>
+<span class="s2">include</span><span class="s1">(</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s3">/generated_config.cmake</span><span class="s1">)</span>
+
+<span class="s0"># TODO: Move the rest of this into files in ephemeral. See</span>
+<span class="s0"># https://github.com/flutter/flutter/issues/57146.</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">WRAPPER_ROOT </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s3">/cpp_client_wrapper</span><span class="s4">&quot;</span><span class="s1">)</span>
+
+<span class="s0"># Set fallback configurations for older versions of the flutter tool.</span>
+<span class="s6">if </span><span class="s1">(</span><span class="s3">NOT DEFINED FLUTTER_TARGET_PLATFORM</span><span class="s1">)</span>
+  <span class="s2">set</span><span class="s1">(</span><span class="s3">FLUTTER_TARGET_PLATFORM </span><span class="s4">&quot;</span><span class="s3">windows-x64</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s6">endif</span><span class="s1">()</span>
+
+<span class="s0"># === Flutter Library ===</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">FLUTTER_LIBRARY </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s3">/flutter_windows.dll</span><span class="s4">&quot;</span><span class="s1">)</span>
+
+<span class="s0"># Published to parent scope for install step.</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">FLUTTER_LIBRARY </span><span class="s5">${</span><span class="s3">FLUTTER_LIBRARY</span><span class="s5">} </span><span class="s3">PARENT_SCOPE</span><span class="s1">)</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">FLUTTER_ICU_DATA_FILE </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s3">/icudtl.dat</span><span class="s4">&quot; </span><span class="s3">PARENT_SCOPE</span><span class="s1">)</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">PROJECT_BUILD_DIR </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">PROJECT_DIR</span><span class="s5">}</span><span class="s3">/build/</span><span class="s4">&quot; </span><span class="s3">PARENT_SCOPE</span><span class="s1">)</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">AOT_LIBRARY </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">PROJECT_DIR</span><span class="s5">}</span><span class="s3">/build/windows/app.so</span><span class="s4">&quot; </span><span class="s3">PARENT_SCOPE</span><span class="s1">)</span>
+
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND FLUTTER_LIBRARY_HEADERS</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_export.h</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_windows.h</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_messenger.h</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_plugin_registrar.h</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_texture_registrar.h</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">TRANSFORM FLUTTER_LIBRARY_HEADERS PREPEND </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s3">/</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s2">add_library</span><span class="s1">(</span><span class="s3">flutter INTERFACE</span><span class="s1">)</span>
+<span class="s2">target_include_directories</span><span class="s1">(</span><span class="s3">flutter INTERFACE</span>
+  <span class="s4">&quot;</span><span class="s5">${</span><span class="s3">EPHEMERAL_DIR</span><span class="s5">}</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">target_link_libraries</span><span class="s1">(</span><span class="s3">flutter INTERFACE </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">FLUTTER_LIBRARY</span><span class="s5">}</span><span class="s3">.lib</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s2">add_dependencies</span><span class="s1">(</span><span class="s3">flutter flutter_assemble</span><span class="s1">)</span>
+
+<span class="s0"># === Wrapper ===</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND CPP_WRAPPER_SOURCES_CORE</span>
+  <span class="s4">&quot;</span><span class="s3">core_implementations.cc</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">standard_codec.cc</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">TRANSFORM CPP_WRAPPER_SOURCES_CORE PREPEND </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">WRAPPER_ROOT</span><span class="s5">}</span><span class="s3">/</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND CPP_WRAPPER_SOURCES_PLUGIN</span>
+  <span class="s4">&quot;</span><span class="s3">plugin_registrar.cc</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">TRANSFORM CPP_WRAPPER_SOURCES_PLUGIN PREPEND </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">WRAPPER_ROOT</span><span class="s5">}</span><span class="s3">/</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND CPP_WRAPPER_SOURCES_APP</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_engine.cc</span><span class="s4">&quot;</span>
+  <span class="s4">&quot;</span><span class="s3">flutter_view_controller.cc</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">list</span><span class="s1">(</span><span class="s3">TRANSFORM CPP_WRAPPER_SOURCES_APP PREPEND </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">WRAPPER_ROOT</span><span class="s5">}</span><span class="s3">/</span><span class="s4">&quot;</span><span class="s1">)</span>
+
+<span class="s0"># Wrapper sources needed for a plugin.</span>
+<span class="s2">add_library</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin STATIC</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_CORE</span><span class="s5">}</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_PLUGIN</span><span class="s5">}</span>
+<span class="s1">)</span>
+<span class="s2">apply_standard_settings</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin</span><span class="s1">)</span>
+<span class="s2">set_target_properties</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin PROPERTIES</span>
+  <span class="s3">POSITION_INDEPENDENT_CODE ON</span><span class="s1">)</span>
+<span class="s2">set_target_properties</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin PROPERTIES</span>
+  <span class="s3">CXX_VISIBILITY_PRESET hidden</span><span class="s1">)</span>
+<span class="s2">target_link_libraries</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin PUBLIC flutter</span><span class="s1">)</span>
+<span class="s2">target_include_directories</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin PUBLIC</span>
+  <span class="s4">&quot;</span><span class="s5">${</span><span class="s3">WRAPPER_ROOT</span><span class="s5">}</span><span class="s3">/include</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">add_dependencies</span><span class="s1">(</span><span class="s3">flutter_wrapper_plugin flutter_assemble</span><span class="s1">)</span>
+
+<span class="s0"># Wrapper sources needed for the runner.</span>
+<span class="s2">add_library</span><span class="s1">(</span><span class="s3">flutter_wrapper_app STATIC</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_CORE</span><span class="s5">}</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_APP</span><span class="s5">}</span>
+<span class="s1">)</span>
+<span class="s2">apply_standard_settings</span><span class="s1">(</span><span class="s3">flutter_wrapper_app</span><span class="s1">)</span>
+<span class="s2">target_link_libraries</span><span class="s1">(</span><span class="s3">flutter_wrapper_app PUBLIC flutter</span><span class="s1">)</span>
+<span class="s2">target_include_directories</span><span class="s1">(</span><span class="s3">flutter_wrapper_app PUBLIC</span>
+  <span class="s4">&quot;</span><span class="s5">${</span><span class="s3">WRAPPER_ROOT</span><span class="s5">}</span><span class="s3">/include</span><span class="s4">&quot;</span>
+<span class="s1">)</span>
+<span class="s2">add_dependencies</span><span class="s1">(</span><span class="s3">flutter_wrapper_app flutter_assemble</span><span class="s1">)</span>
+
+<span class="s0"># === Flutter tool backend ===</span>
+<span class="s0"># _phony_ is a non-existent file to force this command to run every time,</span>
+<span class="s0"># since currently there's no way to get a full input/output list from the</span>
+<span class="s0"># flutter tool.</span>
+<span class="s2">set</span><span class="s1">(</span><span class="s3">PHONY_OUTPUT </span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">CMAKE_CURRENT_BINARY_DIR</span><span class="s5">}</span><span class="s3">/_phony_</span><span class="s4">&quot;</span><span class="s1">)</span>
+<span class="s2">set_source_files_properties</span><span class="s1">(</span><span class="s4">&quot;</span><span class="s5">${</span><span class="s3">PHONY_OUTPUT</span><span class="s5">}</span><span class="s4">&quot; </span><span class="s3">PROPERTIES SYMBOLIC TRUE</span><span class="s1">)</span>
+<span class="s2">add_custom_command</span><span class="s1">(</span>
+  <span class="s3">OUTPUT </span><span class="s5">${</span><span class="s3">FLUTTER_LIBRARY</span><span class="s5">} ${</span><span class="s3">FLUTTER_LIBRARY_HEADERS</span><span class="s5">}</span>
+    <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_CORE</span><span class="s5">} ${</span><span class="s3">CPP_WRAPPER_SOURCES_PLUGIN</span><span class="s5">}</span>
+    <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_APP</span><span class="s5">}</span>
+    <span class="s5">${</span><span class="s3">PHONY_OUTPUT</span><span class="s5">}</span>
+  <span class="s3">COMMAND </span><span class="s5">${</span><span class="s3">CMAKE_COMMAND</span><span class="s5">} </span><span class="s3">-E env</span>
+    <span class="s5">${</span><span class="s3">FLUTTER_TOOL_ENVIRONMENT</span><span class="s5">}</span>
+    <span class="s4">&quot;</span><span class="s5">${</span><span class="s3">FLUTTER_ROOT</span><span class="s5">}</span><span class="s3">/packages/flutter_tools/bin/tool_backend.bat</span><span class="s4">&quot;</span>
+      <span class="s5">${</span><span class="s3">FLUTTER_TARGET_PLATFORM</span><span class="s5">} </span><span class="s3">$&lt;CONFIG&gt;</span>
+  <span class="s3">VERBATIM</span>
+<span class="s1">)</span>
+<span class="s2">add_custom_target</span><span class="s1">(</span><span class="s3">flutter_assemble DEPENDS</span>
+  <span class="s4">&quot;</span><span class="s5">${</span><span class="s3">FLUTTER_LIBRARY</span><span class="s5">}</span><span class="s4">&quot;</span>
+  <span class="s5">${</span><span class="s3">FLUTTER_LIBRARY_HEADERS</span><span class="s5">}</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_CORE</span><span class="s5">}</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_PLUGIN</span><span class="s5">}</span>
+  <span class="s5">${</span><span class="s3">CPP_WRAPPER_SOURCES_APP</span><span class="s5">}</span>
+<span class="s1">)</span>
+</pre>
+</body>
+</html>

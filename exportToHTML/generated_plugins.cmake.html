@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>generated_plugins.cmake</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #5c6370; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #ffc66d;}
+.s3 { color: #bbbbbb;}
+.s4 { color: #d55fde; font-style: italic;}
+.s5 { color: #2bbac5;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+generated_plugins.cmake</font>
+</center></td></tr></table>
+<pre><span class="s0">#</span>
+<span class="s0"># Generated file, do not edit.</span>
+<span class="s0">#</span>
+
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND FLUTTER_PLUGIN_LIST</span>
+  <span class="s3">url_launcher_windows</span>
+<span class="s1">)</span>
+
+<span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND FLUTTER_FFI_PLUGIN_LIST</span>
+<span class="s1">)</span>
+
+<span class="s2">set</span><span class="s1">(</span><span class="s3">PLUGIN_BUNDLED_LIBRARIES</span><span class="s1">)</span>
+
+<span class="s4">foreach</span><span class="s1">(</span><span class="s3">plugin </span><span class="s5">${</span><span class="s3">FLUTTER_PLUGIN_LIST</span><span class="s5">}</span><span class="s1">)</span>
+  <span class="s2">add_subdirectory</span><span class="s1">(</span><span class="s3">flutter/ephemeral/.plugin_symlinks/</span><span class="s5">${</span><span class="s3">plugin</span><span class="s5">}</span><span class="s3">/windows plugins/</span><span class="s5">${</span><span class="s3">plugin</span><span class="s5">}</span><span class="s1">)</span>
+  <span class="s2">target_link_libraries</span><span class="s1">(</span><span class="s5">${</span><span class="s3">BINARY_NAME</span><span class="s5">} </span><span class="s3">PRIVATE </span><span class="s5">${</span><span class="s3">plugin</span><span class="s5">}</span><span class="s3">_plugin</span><span class="s1">)</span>
+  <span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND PLUGIN_BUNDLED_LIBRARIES $&lt;TARGET_FILE:</span><span class="s5">${</span><span class="s3">plugin</span><span class="s5">}</span><span class="s3">_plugin&gt;</span><span class="s1">)</span>
+  <span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND PLUGIN_BUNDLED_LIBRARIES </span><span class="s5">${${</span><span class="s3">plugin</span><span class="s5">}</span><span class="s3">_bundled_libraries</span><span class="s5">}</span><span class="s1">)</span>
+<span class="s4">endforeach</span><span class="s1">(</span><span class="s3">plugin</span><span class="s1">)</span>
+
+<span class="s4">foreach</span><span class="s1">(</span><span class="s3">ffi_plugin </span><span class="s5">${</span><span class="s3">FLUTTER_FFI_PLUGIN_LIST</span><span class="s5">}</span><span class="s1">)</span>
+  <span class="s2">add_subdirectory</span><span class="s1">(</span><span class="s3">flutter/ephemeral/.plugin_symlinks/</span><span class="s5">${</span><span class="s3">ffi_plugin</span><span class="s5">}</span><span class="s3">/windows plugins/</span><span class="s5">${</span><span class="s3">ffi_plugin</span><span class="s5">}</span><span class="s1">)</span>
+  <span class="s2">list</span><span class="s1">(</span><span class="s3">APPEND PLUGIN_BUNDLED_LIBRARIES </span><span class="s5">${${</span><span class="s3">ffi_plugin</span><span class="s5">}</span><span class="s3">_bundled_libraries</span><span class="s5">}</span><span class="s1">)</span>
+<span class="s4">endforeach</span><span class="s1">(</span><span class="s3">ffi_plugin</span><span class="s1">)</span>
+</pre>
+</body>
+</html>

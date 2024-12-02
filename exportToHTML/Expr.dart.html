@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>expr.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+expr.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/models/Expr.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/screens/home/expr_card.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">Expr </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">Expr({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Padding(</span>
+      <span class="s0">padding: </span><span class="s2">const </span><span class="s0">EdgeInsets.symmetric(vertical: defaultPadding),</span>
+      <span class="s0">child: Column(</span>
+        <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+        <span class="s0">children: [</span>
+          <span class="s0">Text(</span>
+            <span class="s1">&quot;Experience &amp; Internships&quot;</span><span class="s0">,</span>
+            <span class="s0">style: Theme.of(context).textTheme.titleLarge,</span>
+          <span class="s0">),</span>
+          <span class="s2">const </span><span class="s0">SizedBox(height: defaultPadding),</span>
+          <span class="s0">SingleChildScrollView(</span>
+            <span class="s0">scrollDirection: Axis.horizontal,</span>
+            <span class="s0">child: Row(</span>
+                <span class="s0">children: List.generate(</span>
+              <span class="s0">demoExperience.length,</span>
+              <span class="s0">(index) =&gt; Padding(</span>
+                <span class="s0">padding: </span><span class="s2">const </span><span class="s0">EdgeInsets.only(right: defaultPadding),</span>
+                <span class="s0">child: ExprCard(</span>
+                  <span class="s0">expr: demoExperience[index],</span>
+                <span class="s0">),</span>
+              <span class="s0">),</span>
+            <span class="s0">)),</span>
+          <span class="s0">),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

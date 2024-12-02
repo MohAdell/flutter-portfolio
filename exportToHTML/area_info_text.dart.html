@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>area_info_text.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+area_info_text.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'../../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">AreaInfoText </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">AreaInfoText({</span>
+    <span class="s0">Key? key,</span>
+    <span class="s2">this</span><span class="s0">.title,</span>
+    <span class="s2">this</span><span class="s0">.text,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s2">final </span><span class="s0">String? title, text;</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Padding(</span>
+      <span class="s0">padding: </span><span class="s2">const </span><span class="s0">EdgeInsets.only(bottom: defaultPadding / </span><span class="s3">1.2</span><span class="s0">),</span>
+      <span class="s0">child: Row(</span>
+        <span class="s0">mainAxisAlignment: MainAxisAlignment.spaceBetween,</span>
+        <span class="s0">children: [</span>
+          <span class="s0">Text(</span>
+            <span class="s0">title!,</span>
+            <span class="s0">style: TextStyle(color: Colors.white),</span>
+          <span class="s0">),</span>
+          <span class="s0">Text(</span>
+            <span class="s0">text!,</span>
+          <span class="s0">),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

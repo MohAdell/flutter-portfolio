@@ -1,0 +1,197 @@
+<html>
+<head>
+<title>side_menu.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+side_menu.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'dart:io'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'dart:typed_data'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter/services.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/constants.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/screens/main/components/skills.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_svg/svg.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:open_file/open_file.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:path_provider/path_provider.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'package:url_launcher/url_launcher.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:url_launcher/url_launcher_string.dart'</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">'area_info_text.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'coding.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'knowledges.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'my_info.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">SideMenu </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">SideMenu({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">Future&lt;</span><span class="s2">void</span><span class="s0">&gt; _downloadCV() async {</span>
+    <span class="s2">final </span><span class="s0">ByteData data = await rootBundle.load(</span><span class="s1">'assets/Mohamed Adel Attia V0.2.pdf'</span><span class="s0">);</span>
+    <span class="s2">final </span><span class="s0">Directory tempDir = await getTemporaryDirectory();</span>
+    <span class="s2">final </span><span class="s0">File tempFile = File(</span><span class="s1">'</span><span class="s0">${tempDir.path}</span><span class="s1">/Mohamed Adel Attia V0.2.pdf'</span><span class="s0">);</span>
+    <span class="s0">await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: </span><span class="s2">true</span><span class="s0">);</span>
+    <span class="s0">OpenFile.open(tempFile.path);</span>
+  <span class="s0">}</span>
+  <span class="s0">Future&lt;</span><span class="s2">void</span><span class="s0">&gt; _downloadDigitaCV() async {</span>
+    <span class="s2">final </span><span class="s0">ByteData data = await rootBundle.load(</span><span class="s1">'assets/Mohamed Adel Attia V0.1.pdf'</span><span class="s0">);</span>
+    <span class="s2">final </span><span class="s0">Directory tempDir = await getTemporaryDirectory();</span>
+    <span class="s2">final </span><span class="s0">File tempFile = File(</span><span class="s1">'</span><span class="s0">${tempDir.path}</span><span class="s1">/Mohamed Adel Attia V0.1.pdf'</span><span class="s0">);</span>
+    <span class="s0">await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: </span><span class="s2">true</span><span class="s0">);</span>
+    <span class="s0">OpenFile.open(tempFile.path);</span>
+  <span class="s0">}</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Drawer(</span>
+      <span class="s0">child: SafeArea(</span>
+        <span class="s0">child: Column(</span>
+          <span class="s0">children: [</span>
+            <span class="s0">MyInfo(),</span>
+            <span class="s0">Expanded(</span>
+              <span class="s0">child: SingleChildScrollView(</span>
+                <span class="s0">padding: EdgeInsets.all(defaultPadding),</span>
+                <span class="s0">child: Column(</span>
+                  <span class="s0">children: [</span>
+                    <span class="s0">AreaInfoText(</span>
+                      <span class="s0">title: </span><span class="s1">&quot;State&quot;</span><span class="s0">,</span>
+                      <span class="s0">text: </span><span class="s1">&quot;Egypt&quot;</span><span class="s0">,</span>
+                    <span class="s0">),</span>
+                    <span class="s0">AreaInfoText(</span>
+                      <span class="s0">title: </span><span class="s1">&quot;City&quot;</span><span class="s0">,</span>
+                      <span class="s0">text: </span><span class="s1">&quot;Desouk&quot;</span><span class="s0">,</span>
+                    <span class="s0">),</span>
+                    <span class="s0">AreaInfoText(</span>
+                      <span class="s0">title: </span><span class="s1">&quot;Age&quot;</span><span class="s0">,</span>
+                      <span class="s0">text: </span><span class="s1">&quot;24&quot;</span><span class="s0">,</span>
+                    <span class="s0">),</span>
+                    <span class="s0">Skills(),</span>
+                    <span class="s0">SizedBox(</span>
+                      <span class="s0">height: defaultPadding,</span>
+                    <span class="s0">),</span>
+                    <span class="s0">Coding(),</span>
+                    <span class="s0">Knowledges(),</span>
+                    <span class="s0">Divider(),</span>
+                    <span class="s0">TextButton(</span>
+                      <span class="s0">onPressed: _downloadCV,</span>
+                      <span class="s0">child: FittedBox(</span>
+                        <span class="s0">child: Row(</span>
+                          <span class="s0">children: [</span>
+                            <span class="s0">Text(</span>
+                              <span class="s1">&quot;DOWNLOAD Flutter CV&quot;</span><span class="s0">,</span>
+                              <span class="s0">style: TextStyle(</span>
+                                <span class="s0">color: Theme.of(context)</span>
+                                    <span class="s0">.textTheme</span>
+                                    <span class="s0">.bodyLarge!</span>
+                                    <span class="s0">.color,</span>
+                              <span class="s0">),</span>
+                            <span class="s0">),</span>
+                            <span class="s0">SizedBox(width: defaultPadding / </span><span class="s3">2</span><span class="s0">),</span>
+                            <span class="s0">SvgPicture.asset(</span><span class="s1">&quot;assets/icons/download.svg&quot;</span><span class="s0">),</span>
+                          <span class="s0">],</span>
+                        <span class="s0">),</span>
+                      <span class="s0">),</span>
+                    <span class="s0">),</span>
+                    <span class="s0">TextButton(</span>
+                      <span class="s0">onPressed: _downloadDigitaCV,</span>
+                      <span class="s0">child: FittedBox(</span>
+                        <span class="s0">child: Row(</span>
+                          <span class="s0">children: [</span>
+                            <span class="s0">Text(</span>
+                              <span class="s1">&quot;Marketing &amp; WebBuilder CV&quot;</span><span class="s0">,</span>
+                              <span class="s0">style: TextStyle(</span>
+                                <span class="s0">color: Theme.of(context)</span>
+                                    <span class="s0">.textTheme</span>
+                                    <span class="s0">.bodyLarge!</span>
+                                    <span class="s0">.color,</span>
+                              <span class="s0">),</span>
+                            <span class="s0">),</span>
+                            <span class="s0">SizedBox(width: defaultPadding / </span><span class="s3">2</span><span class="s0">),</span>
+                            <span class="s0">SvgPicture.asset(</span><span class="s1">&quot;assets/icons/download.svg&quot;</span><span class="s0">),</span>
+                          <span class="s0">],</span>
+                        <span class="s0">),</span>
+                      <span class="s0">),</span>
+                    <span class="s0">),</span>
+                    <span class="s0">Container(</span>
+                      <span class="s0">color: Color(</span><span class="s3">0xFF24242E</span><span class="s0">),</span>
+                      <span class="s0">child: Row(</span>
+                        <span class="s0">children: [</span>
+                          <span class="s0">Spacer(),</span>
+                          <span class="s0">IconButton(</span>
+                            <span class="s0">onPressed: () async {</span>
+                              <span class="s2">const </span><span class="s0">url =</span>
+                                  <span class="s1">'https://www.linkedin.com/in/mohameddev'</span><span class="s0">;</span>
+                              <span class="s2">if </span><span class="s0">(await canLaunch(url)) {</span>
+                                <span class="s0">await launch(url);</span>
+                              <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                                <span class="s2">throw </span><span class="s1">'Could not launch </span><span class="s0">$url</span><span class="s1">'</span><span class="s0">;</span>
+                              <span class="s0">}</span>
+                            <span class="s0">},</span>
+                            <span class="s0">icon: SvgPicture.asset(</span><span class="s1">&quot;assets/icons/linkedin.svg&quot;</span><span class="s0">),</span>
+                          <span class="s0">),</span>
+                          <span class="s0">IconButton(</span>
+                            <span class="s0">onPressed: () async {</span>
+                              <span class="s2">const </span><span class="s0">url =</span>
+                                  <span class="s1">'https://github.com/MohAdell'</span><span class="s0">;</span>
+                              <span class="s2">if </span><span class="s0">(await canLaunch(url)) {</span>
+                                <span class="s0">await launch(url);</span>
+                              <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                                <span class="s2">throw </span><span class="s1">'Could not launch </span><span class="s0">$url</span><span class="s1">'</span><span class="s0">;</span>
+                              <span class="s0">}</span>
+                            <span class="s0">},</span>
+                            <span class="s0">icon: SvgPicture.asset(</span><span class="s1">&quot;assets/icons/github.svg&quot;</span><span class="s0">),</span>
+                          <span class="s0">),</span>
+                          <span class="s0">IconButton(</span>
+                            <span class="s0">onPressed: () async {</span>
+                              <span class="s2">const </span><span class="s0">url =</span>
+                                  <span class="s1">'https://www.instagram.com/moohadel'</span><span class="s0">;</span>
+                              <span class="s2">if </span><span class="s0">(await canLaunch(url)) {</span>
+                                <span class="s0">await launch(url);</span>
+                              <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                                <span class="s2">throw </span><span class="s1">'Could not launch </span><span class="s0">$url</span><span class="s1">'</span><span class="s0">;</span>
+                              <span class="s0">}</span>
+                            <span class="s0">},</span>
+                            <span class="s0">icon: SvgPicture.asset(</span><span class="s1">&quot;assets/icons/instagram.svg&quot;</span><span class="s0">,width: </span><span class="s3">25</span><span class="s0">,height: </span><span class="s3">25</span><span class="s0">,),</span>
+                          <span class="s0">),</span>
+                          <span class="s0">IconButton(</span>
+                            <span class="s0">onPressed: () async {</span>
+                              <span class="s2">const </span><span class="s0">url =</span>
+                                  <span class="s1">'https://www.facebook.com/MoohAdelll'</span><span class="s0">;</span>
+                              <span class="s2">if </span><span class="s0">(await canLaunch(url)) {</span>
+                                <span class="s0">await launch(url);</span>
+                              <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                                <span class="s2">throw </span><span class="s1">'Could not launch </span><span class="s0">$url</span><span class="s1">'</span><span class="s0">;</span>
+                              <span class="s0">}</span>
+                            <span class="s0">},</span>
+                            <span class="s0">icon: SvgPicture.asset(</span><span class="s1">&quot;assets/icons/facebook.svg&quot;</span><span class="s0">,width: </span><span class="s3">25</span><span class="s0">,height: </span><span class="s3">25</span><span class="s0">,),</span>
+                          <span class="s0">),</span>
+                          <span class="s0">Spacer(),</span>
+                        <span class="s0">],</span>
+                      <span class="s0">),</span>
+                    <span class="s0">)</span>
+                  <span class="s0">],</span>
+                <span class="s0">),</span>
+              <span class="s0">),</span>
+            <span class="s0">),</span>
+          <span class="s0">],</span>
+        <span class="s0">),</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

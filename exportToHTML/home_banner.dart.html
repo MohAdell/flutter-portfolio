@@ -1,0 +1,193 @@
+<html>
+<head>
+<title>home_banner.dart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbbbbb;}
+.s1 { color: #89ca78;}
+.s2 { color: #d55fde; font-style: italic;}
+.s3 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+home_banner.dart</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">'package:animated_text_kit/animated_text_kit.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter/material.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:flutter_profile/responsive.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:url_launcher/link.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'package:url_launcher/url_launcher.dart'</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">'../../../constants.dart'</span><span class="s0">;</span>
+
+<span class="s2">class </span><span class="s0">HomeBanner </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">HomeBanner({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">AspectRatio(</span>
+      <span class="s0">aspectRatio: Responsive.isMobileLarge(context) ? </span><span class="s3">2.5 </span><span class="s0">: </span><span class="s3">3</span><span class="s0">,</span>
+      <span class="s0">child: Stack(</span>
+        <span class="s0">fit: StackFit.expand,</span>
+        <span class="s0">children: [</span>
+          <span class="s0">Image.asset(</span>
+            <span class="s1">&quot;assets/images/bg.jpeg&quot;</span><span class="s0">,</span>
+            <span class="s0">fit: BoxFit.cover,</span>
+          <span class="s0">),</span>
+          <span class="s0">Container(</span>
+            <span class="s0">color: darkColor.withOpacity(</span><span class="s3">0.75</span><span class="s0">),</span>
+          <span class="s0">),</span>
+          <span class="s0">Padding(</span>
+            <span class="s0">padding: </span><span class="s2">const </span><span class="s0">EdgeInsets.symmetric(horizontal: defaultPadding),</span>
+            <span class="s0">child: Column(</span>
+              <span class="s0">crossAxisAlignment: CrossAxisAlignment.start,</span>
+              <span class="s0">mainAxisAlignment: MainAxisAlignment.center,</span>
+              <span class="s0">children: [</span>
+                <span class="s0">Text(</span>
+                  <span class="s1">&quot;Discover my Amazing \nCode Space!&quot;</span><span class="s0">,</span>
+                  <span class="s0">style: Responsive.isDesktop(context)</span>
+                      <span class="s0">? Theme.of(context).textTheme.displaySmall!.copyWith(</span>
+                            <span class="s0">fontWeight: FontWeight.bold,</span>
+                            <span class="s0">color: Colors.white,</span>
+                          <span class="s0">)</span>
+                      <span class="s0">: Theme.of(context).textTheme.headlineSmall!.copyWith(</span>
+                            <span class="s0">fontWeight: FontWeight.bold,</span>
+                            <span class="s0">color: Colors.white,</span>
+                          <span class="s0">),</span>
+                <span class="s0">),</span>
+                <span class="s2">if </span><span class="s0">(Responsive.isMobileLarge(context))</span>
+                  <span class="s2">const </span><span class="s0">SizedBox(height: defaultPadding / </span><span class="s3">2</span><span class="s0">),</span>
+                <span class="s0">MyBuilderAnimatedText(),</span>
+                <span class="s0">SizedBox(height: defaultPadding),</span>
+                <span class="s2">if </span><span class="s0">(!Responsive.isMobileLarge(context))</span>
+                  <span class="s0">ElevatedButton(</span>
+                    <span class="s0">onPressed:</span>
+                        <span class="s2">null</span><span class="s0">, </span>
+                    <span class="s0">style: TextButton.styleFrom(</span>
+                      <span class="s0">padding: EdgeInsets.symmetric(</span>
+                          <span class="s0">horizontal: defaultPadding * </span><span class="s3">2</span><span class="s0">,</span>
+                          <span class="s0">vertical: defaultPadding),</span>
+                      <span class="s0">backgroundColor: primaryColor,</span>
+                    <span class="s0">),</span>
+                    <span class="s0">child: Link(</span>
+                      <span class="s0">uri: Uri.parse(</span><span class="s1">'https://github.com/MohAdell'</span><span class="s0">),</span>
+                      <span class="s0">target: LinkTarget.self,</span>
+                      <span class="s0">builder: (context, followLink) =&gt; GestureDetector(</span>
+                        <span class="s0">onTap: followLink,</span>
+                        <span class="s0">child: Text(</span>
+                          <span class="s1">&quot;EXPLORE NOW&quot;</span><span class="s0">,</span>
+                          <span class="s0">style: TextStyle(color: Colors.white),</span>
+                        <span class="s0">),</span>
+                      <span class="s0">),</span>
+                    <span class="s0">),</span>
+                  <span class="s0">),</span>
+              <span class="s0">],</span>
+            <span class="s0">),</span>
+          <span class="s0">),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+
+<span class="s2">class </span><span class="s0">MyBuilderAnimatedText </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">MyBuilderAnimatedText({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">DefaultTextStyle(</span>
+      <span class="s0">style: Theme.of(context).textTheme.titleMedium!,</span>
+      <span class="s0">maxLines: </span><span class="s3">1</span><span class="s0">,</span>
+      <span class="s0">child: Row(</span>
+        <span class="s0">children: [</span>
+          <span class="s2">if </span><span class="s0">(!Responsive.isMobileLarge(context)) FlutterCodedText(),</span>
+          <span class="s2">if </span><span class="s0">(!Responsive.isMobileLarge(context))</span>
+            <span class="s0">SizedBox(width: defaultPadding / </span><span class="s3">2</span><span class="s0">),</span>
+          <span class="s0">Text(</span><span class="s1">&quot;I Developed &quot;</span><span class="s0">),</span>
+          <span class="s0">Responsive.isMobile(context)</span>
+              <span class="s0">? Expanded(child: AnimatedText())</span>
+              <span class="s0">: AnimatedText(),</span>
+          <span class="s2">if </span><span class="s0">(!Responsive.isMobileLarge(context))</span>
+            <span class="s0">SizedBox(width: defaultPadding / </span><span class="s3">2</span><span class="s0">),</span>
+          <span class="s2">if </span><span class="s0">(!Responsive.isMobileLarge(context)) FlutterCodedText(),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+
+<span class="s2">class </span><span class="s0">AnimatedText </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">AnimatedText({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">AnimatedTextKit(</span>
+      <span class="s0">animatedTexts: [</span>
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Weather App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Todo List App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;News App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Ecommerce App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Chat App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Azkar App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+        <span class="s0">TyperAnimatedText(</span>
+          <span class="s1">&quot;Targemly App&quot;</span><span class="s0">,</span>
+          <span class="s0">speed: Duration(milliseconds: </span><span class="s3">60</span><span class="s0">),</span>
+        <span class="s0">),</span>
+
+      <span class="s0">],</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+
+<span class="s2">class </span><span class="s0">FlutterCodedText </span><span class="s2">extends </span><span class="s0">StatelessWidget {</span>
+  <span class="s2">const </span><span class="s0">FlutterCodedText({</span>
+    <span class="s0">Key? key,</span>
+  <span class="s0">}) : </span><span class="s2">super</span><span class="s0">(key: key);</span>
+
+  <span class="s0">@override</span>
+  <span class="s0">Widget build(BuildContext context) {</span>
+    <span class="s2">return </span><span class="s0">Text.rich(</span>
+      <span class="s0">TextSpan(</span>
+        <span class="s0">text: </span><span class="s1">&quot;&lt;&quot;</span><span class="s0">,</span>
+        <span class="s0">children: [</span>
+          <span class="s0">TextSpan(</span>
+            <span class="s0">text: </span><span class="s1">&quot;AppTechnology&quot;</span><span class="s0">,</span>
+            <span class="s0">style: TextStyle(color: primaryColor),</span>
+          <span class="s0">),</span>
+          <span class="s0">TextSpan(text: </span><span class="s1">&quot;&gt;&quot;</span><span class="s0">),</span>
+        <span class="s0">],</span>
+      <span class="s0">),</span>
+    <span class="s0">);</span>
+  <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

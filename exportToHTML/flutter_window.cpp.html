@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>flutter_window.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #89ca78;}
+.s3 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+flutter_window.cpp</font>
+</center></td></tr></table>
+<pre><span class="s0">#include </span><span class="s2">&quot;flutter_window.h&quot;</span>
+
+<span class="s0">#include </span><span class="s2">&lt;optional&gt;</span>
+
+<span class="s0">#include </span><span class="s2">&quot;flutter/generated_plugin_registrant.h&quot;</span>
+
+<span class="s1">FlutterWindow::FlutterWindow(</span><span class="s0">const </span><span class="s1">flutter::DartProject&amp; project)</span>
+    <span class="s1">: project_(project) {}</span>
+
+<span class="s1">FlutterWindow::~FlutterWindow() {}</span>
+
+<span class="s0">bool </span><span class="s1">FlutterWindow::OnCreate() {</span>
+  <span class="s0">if </span><span class="s1">(!Win32Window::OnCreate()) {</span>
+    <span class="s0">return false</span><span class="s1">;</span>
+  <span class="s1">}</span>
+
+  <span class="s1">RECT frame = GetClientArea();</span>
+
+  <span class="s3">// The size here must match the window dimensions to avoid unnecessary surface</span>
+  <span class="s3">// creation / destruction in the startup path.</span>
+  <span class="s1">flutter_controller_ = std::make_unique&lt;flutter::FlutterViewController&gt;(</span>
+      <span class="s1">frame.right - frame.left, frame.bottom - frame.top, project_);</span>
+  <span class="s3">// Ensure that basic setup of the controller was successful.</span>
+  <span class="s0">if </span><span class="s1">(!flutter_controller_-&gt;engine() || !flutter_controller_-&gt;view()) {</span>
+    <span class="s0">return false</span><span class="s1">;</span>
+  <span class="s1">}</span>
+  <span class="s1">RegisterPlugins(flutter_controller_-&gt;engine());</span>
+  <span class="s1">SetChildContent(flutter_controller_-&gt;view()-&gt;GetNativeWindow());</span>
+
+  <span class="s1">flutter_controller_-&gt;engine()-&gt;SetNextFrameCallback([&amp;]() {</span>
+    <span class="s0">this</span><span class="s1">-&gt;Show();</span>
+  <span class="s1">});</span>
+
+  <span class="s3">// Flutter can complete the first frame before the &quot;show window&quot; callback is</span>
+  <span class="s3">// registered. The following call ensures a frame is pending to ensure the</span>
+  <span class="s3">// window is shown. It is a no-op if the first frame hasn't completed yet.</span>
+  <span class="s1">flutter_controller_-&gt;ForceRedraw();</span>
+
+  <span class="s0">return true</span><span class="s1">;</span>
+<span class="s1">}</span>
+
+<span class="s0">void </span><span class="s1">FlutterWindow::OnDestroy() {</span>
+  <span class="s0">if </span><span class="s1">(flutter_controller_) {</span>
+    <span class="s1">flutter_controller_ = </span><span class="s0">nullptr</span><span class="s1">;</span>
+  <span class="s1">}</span>
+
+  <span class="s1">Win32Window::OnDestroy();</span>
+<span class="s1">}</span>
+
+<span class="s1">LRESULT</span>
+<span class="s1">FlutterWindow::MessageHandler(HWND hwnd, UINT </span><span class="s0">const </span><span class="s1">message,</span>
+                              <span class="s1">WPARAM </span><span class="s0">const </span><span class="s1">wparam,</span>
+                              <span class="s1">LPARAM </span><span class="s0">const </span><span class="s1">lparam) </span><span class="s0">noexcept </span><span class="s1">{</span>
+  <span class="s3">// Give Flutter, including plugins, an opportunity to handle window messages.</span>
+  <span class="s0">if </span><span class="s1">(flutter_controller_) {</span>
+    <span class="s1">std::optional&lt;LRESULT&gt; result =</span>
+        <span class="s1">flutter_controller_-&gt;HandleTopLevelWindowProc(hwnd, message, wparam,</span>
+                                                      <span class="s1">lparam);</span>
+    <span class="s0">if </span><span class="s1">(result) {</span>
+      <span class="s0">return </span><span class="s1">*result;</span>
+    <span class="s1">}</span>
+  <span class="s1">}</span>
+
+  <span class="s0">switch </span><span class="s1">(message) {</span>
+    <span class="s0">case </span><span class="s1">WM_FONTCHANGE:</span>
+      <span class="s1">flutter_controller_-&gt;engine()-&gt;ReloadSystemFonts();</span>
+      <span class="s0">break</span><span class="s1">;</span>
+  <span class="s1">}</span>
+
+  <span class="s0">return </span><span class="s1">Win32Window::MessageHandler(hwnd, message, wparam, lparam);</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
